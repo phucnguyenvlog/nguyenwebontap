@@ -36,6 +36,15 @@
     input {
       transition: all 0.3s ease;
     }
+    
+    .fade-in {
+      animation: fadeIn 0.3s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 min-h-screen flex items-center justify-center p-4 font-sans text-gray-800 antialiased">
@@ -78,18 +87,22 @@
         <h2 class="font-bold text-slate-700 mb-3 flex items-center justify-center gap-2 text-lg">
           <span class="text-xl text-yellow-500">🏆</span> BXH Top 3
         </h2>
-        <ul id="leaderboardList" class="space-y-2 text-left min-h-[50px]">
-          <!-- List items will be injected here -->
-        </ul>
+        <ul id="leaderboardList" class="space-y-2 text-left min-h-[50px]"></ul>
       </div>
     </div>
 
     <!-- GAME SECTION -->
     <div id="game" class="hidden">
+      <!-- Progress Bar -->
+      <div class="w-full bg-slate-200 rounded-full h-1.5 mb-4">
+        <div id="progressBar" class="bg-blue-600 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+      </div>
+      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Câu hỏi <span id="currentQuestionNum">1</span>/21</p>
+
       <!-- Question & Timer -->
-      <div class="mb-6 relative">
-        <div id="question" class="text-6xl font-black text-slate-800 my-6 tracking-wider drop-shadow-sm h-24 flex items-center justify-center leading-none"></div>
-        <div class="inline-flex items-center justify-center gap-2 text-xl font-bold text-slate-600 bg-slate-100/80 border border-slate-200 py-2 px-6 rounded-xl shadow-sm">
+      <div class="mb-4 relative">
+        <div id="question" class="text-6xl font-black text-slate-800 my-4 tracking-wider drop-shadow-sm h-24 flex items-center justify-center leading-none"></div>
+        <div class="inline-flex items-center justify-center gap-2 text-lg font-bold text-slate-600 bg-slate-100/80 border border-slate-200 py-1.5 px-5 rounded-xl shadow-sm">
           ⏱️ <span id="timer" class="text-blue-600 w-8 text-center">30</span>s
         </div>
       </div>
@@ -127,7 +140,7 @@
 
   <script>
     // --- DATA ---
-    const valencyData = [
+    const rawValencyData = [
       {q: "H", a: "I"}, {q: "C", a: "IV"}, {q: "N", a: "II,III,IV,..."}, {q: "O", a: "II"},
       {q: "Na", a: "I"}, {q: "Mg", a: "II"}, {q: "Al", a: "III"}, {q: "P", a: "III,V"},
       {q: "S", a: "II,IV,VI"}, {q: "Cl", a: "I,..."}, {q: "K", a: "I"}, {q: "Ca", a: "II"},
@@ -136,7 +149,7 @@
       {q: "SO4", a: "II"}, {q: "CO3", a: "II"}, {q: "NH4", a: "I"}
     ];
     
-    const symbolData = [
+    const rawSymbolData = [
       {q: "Hydrogen", a: "H"}, {q: "Carbon", a: "C"}, {q: "Nitrogen", a: "N"}, 
       {q: "Oxygen", a: "O"}, {q: "Sodium", a: "Na"}, {q: "Magnesium", a: "Mg"},
       {q: "Aluminium", a: "Al"}, {q: "Phosphorus", a: "P"}, {q: "Sulfur", a: "S"},
@@ -148,7 +161,8 @@
 
     // --- STATE ---
     let mode = "valency";
-    let current = 0;
+    let gameData = [];
+    let currentIdx = 0;
     let score = 0;
     let streak = 0;
     let timer = 30;
@@ -157,9 +171,22 @@
     let answered = false;
     let leaderboard = [];
 
+    // --- UTILS ---
+    function shuffleArray(array) {
+      const newArr = [...array];
+      for (let i = newArr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+      }
+      return newArr;
+    }
+
+    function formatFormula(t) { 
+      return t.replace(/(\d+)/g, '<sub>$1</sub>'); 
+    }
+
     // --- INITIALIZATION ---
     window.onload = () => {
-      // Tải dữ liệu BXH từ localStorage an toàn
       try {
         const saved = localStorage.getItem("chem_strict_bxh");
         leaderboard = saved ? JSON.parse(saved) : [];
@@ -167,15 +194,9 @@
       } catch(e) {
         leaderboard = [];
       }
-      
       showLeaderboard();
       document.getElementById("playerName").focus();
     };
-
-    // --- UTILS ---
-    function formatFormula(t) { 
-      return t.replace(/(\d+)/g, '<sub>$1</sub>'); 
-    }
 
     function startMode(m) {
       player = document.getElementById("playerName").value.trim();
@@ -185,11 +206,19 @@
         return;
       }
       document.getElementById("nameError").classList.add("hidden");
-      mode = m; score = 0; streak = 0; updateUI();
+      mode = m;
+      score = 0;
+      streak = 0;
+      currentIdx = 0;
+      
+      // Sáo trộn 21 câu hỏi
+      gameData = shuffleArray(mode === "valency" ? rawValencyData : rawSymbolData);
+      
+      updateUI();
       document.getElementById("menu").classList.add("hidden");
       document.getElementById("game").classList.remove("hidden");
       document.getElementById("backBtn").classList.remove("hidden");
-      pickRandomQuestion();
+      loadQuestion();
     }
 
     function goHome() {
@@ -201,16 +230,17 @@
       showLeaderboard();
     }
 
-    function pickRandomQuestion() {
-      let data = mode === "valency" ? valencyData : symbolData;
-      let last = current;
-      do { current = Math.floor(Math.random() * data.length); } while (current === last && data.length > 1);
-      loadQuestion();
-    }
-
     function loadQuestion() {
-      let data = mode === "valency" ? valencyData : symbolData;
-      document.getElementById("question").innerHTML = formatFormula(data[current].q);
+      if (currentIdx >= 21) {
+        endGame();
+        return;
+      }
+      
+      const qData = gameData[currentIdx];
+      document.getElementById("question").innerHTML = formatFormula(qData.q);
+      document.getElementById("currentQuestionNum").innerText = currentIdx + 1;
+      document.getElementById("progressBar").style.width = `${((currentIdx) / 21) * 100}%`;
+      
       const input = document.getElementById("answer");
       input.value = ""; input.disabled = false; input.focus();
       document.getElementById("result").innerHTML = "";
@@ -235,7 +265,7 @@
     function handleTimeOut() {
       if (answered) return;
       answered = true;
-      let correct = (mode === "valency" ? valencyData : symbolData)[current].a;
+      let correct = gameData[currentIdx].a;
       document.getElementById("result").innerHTML = `<span class="text-red-500 font-bold bg-red-100/50 px-4 py-2 rounded-lg inline-block w-full text-sm">Hết giờ! Đáp án: ${correct}</span>`;
       streak = 0;
       document.getElementById("answer").disabled = true;
@@ -252,9 +282,7 @@
       answered = true;
       document.getElementById("answer").disabled = true;
 
-      let data = mode === "valency" ? valencyData : symbolData;
-      let correct = data[current].a;
-      
+      let correct = gameData[currentIdx].a;
       let cleanUser = user.replace(/\s+/g, '');
       let cleanCorrect = correct.replace(/\s+/g, '');
 
@@ -271,7 +299,7 @@
 
       if (isCorrect) {
         if (isWarning) {
-          resDiv.innerHTML = `<span class="text-orange-600 font-bold bg-orange-100/50 px-4 py-2 rounded-lg inline-block w-full text-xs sm:text-sm">⚠️ Tạm đúng! Nhớ ghi thêm <b>,...</b> (Đáp án: ${correct})</span>`;
+          resDiv.innerHTML = `<span class="text-orange-600 font-bold bg-orange-100/50 px-4 py-2 rounded-lg inline-block w-full text-xs sm:text-sm">⚠️ Tạm đúng! Nhớ thêm <b>,...</b> (Đáp án: ${correct})</span>`;
         } else {
           resDiv.innerHTML = `<span class="text-emerald-600 font-bold bg-emerald-100/50 px-4 py-2 rounded-lg inline-block w-full">✅ CHÍNH XÁC</span>`;
         }
@@ -279,14 +307,34 @@
       } else {
         container.classList.add("wrong-shake");
         setTimeout(() => container.classList.remove("wrong-shake"), 400);
-        resDiv.innerHTML = `<span class="text-red-600 text-xs sm:text-sm font-semibold bg-red-100/50 px-4 py-2 rounded-lg inline-block w-full leading-tight">❌ SAI! Nhập đủ: <b class="text-red-700 text-base">${correct}</b></span>`;
+        resDiv.innerHTML = `<span class="text-red-600 text-xs sm:text-sm font-semibold bg-red-100/50 px-4 py-2 rounded-lg inline-block w-full leading-tight">❌ SAI! Đáp án: <b class="text-red-700 text-base">${correct}</b></span>`;
         streak = 0;
       }
       toggleButtons(false);
       updateUI();
     }
 
-    function nextQuestion() { pickRandomQuestion(); }
+    function nextQuestion() {
+      currentIdx++;
+      loadQuestion();
+    }
+
+    function endGame() {
+      clearInterval(interval);
+      document.getElementById("progressBar").style.width = "100%";
+      const resDiv = document.getElementById("result");
+      resDiv.innerHTML = `
+        <div class="fade-in py-2">
+          <p class="text-blue-600 text-xl font-black">HOÀN THÀNH!</p>
+          <p class="text-slate-600 text-sm">Bạn đúng ${score}/21 câu.</p>
+          <button onclick="goHome()" class="mt-3 px-6 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold shadow-md">Về Menu</button>
+        </div>
+      `;
+      document.getElementById("nextBtn").classList.add("hidden");
+      document.getElementById("submitBtn").classList.add("hidden");
+      saveScore();
+    }
+
     function enterKey(e) { if (e.key === "Enter") answered ? nextQuestion() : checkAnswer(); }
     
     function toggleButtons(isAnswering) {
@@ -315,25 +363,21 @@
     function showLeaderboard() {
       const list = document.getElementById("leaderboardList");
       if (!list) return;
-      
       list.innerHTML = "";
       if (leaderboard.length === 0) {
         list.innerHTML = "<li class='text-center text-slate-400 text-sm py-4 italic'>Chưa có kỷ lục nào</li>";
         return;
       }
-
       const medals = ["🥇", "🥈", "🥉"];
       leaderboard.forEach((p, i) => {
-        const item = document.createElement("li");
-        item.className = "flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100 shadow-sm text-sm font-medium animate-fade-in";
-        item.innerHTML = `
-          <span class="flex items-center gap-2 overflow-hidden">
-            <span class="text-lg flex-shrink-0">${medals[i] || "🏅"}</span> 
-            <span class="text-slate-700 truncate font-bold uppercase tracking-tight">${p.name}</span>
-          </span>
-          <span class="text-blue-600 font-black bg-blue-50 px-3 py-1 rounded-lg border border-blue-100 flex-shrink-0 ml-2">${p.score} đ</span>
-        `;
-        list.appendChild(item);
+        list.innerHTML += `
+          <li class="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100 shadow-sm text-sm font-medium fade-in">
+            <span class="flex items-center gap-2 overflow-hidden">
+              <span class="text-lg flex-shrink-0">${medals[i] || "🏅"}</span> 
+              <span class="text-slate-700 truncate font-bold uppercase tracking-tight">${p.name}</span>
+            </span>
+            <span class="text-blue-600 font-black bg-blue-50 px-3 py-1 rounded-lg border border-blue-100 flex-shrink-0 ml-2">${p.score}/21</span>
+          </li>`;
       });
     }
   </script>
