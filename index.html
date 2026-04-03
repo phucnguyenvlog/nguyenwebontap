@@ -6,14 +6,14 @@
   <title>Ôn Hóa Học Chính Xác</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Custom Subscript Styling for Chemical Formulas */
+    /* Tùy chỉnh hiển thị chỉ số dưới cho công thức hóa học */
     sub { 
       font-size: 0.65em; 
       vertical-align: sub; 
       font-weight: 600;
     }
     
-    /* Glassmorphism Effect */
+    /* Hiệu ứng Glassmorphism */
     .glass-card {
       background: rgba(255, 255, 255, 0.95);
       box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
@@ -22,7 +22,7 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    /* Wrong Answer Shake Animation */
+    /* Hiệu ứng rung khi trả lời sai */
     .wrong-shake { 
       animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; 
     }
@@ -49,7 +49,7 @@
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 min-h-screen flex items-center justify-center p-4 font-sans text-gray-800 antialiased">
 
-  <!-- Back Button -->
+  <!-- Nút Quay lại Menu chính -->
   <button id="backBtn" onclick="goHome()" class="hidden fixed top-4 left-4 bg-white/10 hover:bg-white/25 text-white rounded-full w-12 h-12 flex items-center justify-center transition-all duration-200 shadow-lg backdrop-blur-md z-50 border border-white/10 group">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -58,48 +58,35 @@
 
   <div id="mainContainer" class="glass-card rounded-3xl w-full max-w-md p-6 sm:p-8 text-center transition-all duration-300 relative overflow-hidden">
     
-    <!-- Header -->
+    <!-- Tiêu đề -->
     <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 mb-1 flex justify-center items-center gap-2 drop-shadow-sm">
       <span class="text-3xl drop-shadow-md">🧪</span> Ôn Hóa Học
     </h1>
     <p class="text-xs text-red-500 font-bold mb-6 tracking-wide uppercase">Lưu ý: Phải viết đúng hoa/thường</p>
 
-    <!-- MENU SECTION -->
+    <!-- GIAO DIỆN MENU -->
     <div id="menu" class="fade-in">
-      <div class="mb-6 relative text-left">
-        <label class="block text-xs font-bold text-slate-500 mb-1 ml-2 uppercase tracking-widest">Tên người chơi</label>
-        <input id="playerName" type="text" placeholder="Nhập tên của bạn..." 
-          class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none text-center text-lg font-semibold text-slate-700 placeholder-slate-400 bg-white/80">
-        <p id="nameError" class="hidden absolute -bottom-6 left-0 right-0 text-red-500 text-sm font-semibold animate-pulse text-center">⚠️ Vui lòng nhập tên!</p>
-      </div>
-
-      <div class="grid grid-cols-2 gap-4 mb-8 mt-10">
-        <button onclick="startMode('valency')" class="bg-gradient-to-b from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-4 px-4 rounded-xl shadow-lg shadow-blue-500/30 transition-all active:scale-95 border border-blue-400/50 leading-tight">
-          Xác định<br><span class="text-sm opacity-90">Hóa Trị</span>
+      <p class="text-slate-500 text-sm mb-8">Chọn chế độ để bắt đầu lượt chơi 21 câu hỏi</p>
+      
+      <div class="grid grid-cols-1 gap-4 mb-4 mt-4">
+        <button onclick="startMode('valency')" class="bg-gradient-to-b from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-5 px-4 rounded-2xl shadow-lg shadow-blue-500/30 transition-all active:scale-95 border border-blue-400/50 text-xl">
+          Ôn tập Hóa Trị
         </button>
-        <button onclick="startMode('symbol')" class="bg-gradient-to-b from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white font-bold py-4 px-4 rounded-xl shadow-lg shadow-cyan-500/30 transition-all active:scale-95 border border-cyan-400/50 leading-tight">
-          Viết<br><span class="text-sm opacity-90">Kí Hiệu</span>
+        <button onclick="startMode('symbol')" class="bg-gradient-to-b from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white font-bold py-5 px-4 rounded-2xl shadow-lg shadow-cyan-500/30 transition-all active:scale-95 border border-cyan-400/50 text-xl">
+          Ôn tập Kí Hiệu
         </button>
-      </div>
-
-      <!-- Leaderboard -->
-      <div class="bg-slate-50/80 rounded-2xl p-4 shadow-inner border border-slate-200 backdrop-blur-sm">
-        <h2 class="font-bold text-slate-700 mb-3 flex items-center justify-center gap-2 text-lg">
-          <span class="text-xl text-yellow-500">🏆</span> BXH Top 3
-        </h2>
-        <ul id="leaderboardList" class="space-y-2 text-left min-h-[50px]"></ul>
       </div>
     </div>
 
-    <!-- GAME SECTION -->
+    <!-- GIAO DIỆN TRÒ CHƠI -->
     <div id="game" class="hidden">
-      <!-- Progress Bar -->
+      <!-- Thanh tiến trình -->
       <div class="w-full bg-slate-200 rounded-full h-1.5 mb-4">
         <div id="progressBar" class="bg-blue-600 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
       </div>
       <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Câu hỏi <span id="currentQuestionNum">1</span>/21</p>
 
-      <!-- Question & Timer -->
+      <!-- Câu hỏi & Đồng hồ -->
       <div class="mb-4 relative">
         <div id="question" class="text-6xl font-black text-slate-800 my-4 tracking-wider drop-shadow-sm h-24 flex items-center justify-center leading-none"></div>
         <div class="inline-flex items-center justify-center gap-2 text-lg font-bold text-slate-600 bg-slate-100/80 border border-slate-200 py-1.5 px-5 rounded-xl shadow-sm">
@@ -107,13 +94,13 @@
         </div>
       </div>
 
-      <!-- Answer Input -->
+      <!-- Ô nhập đáp án -->
       <div class="relative mb-4">
         <input id="answer" type="text" onkeydown="enterKey(event)" placeholder="Nhập đáp án..." autocomplete="off" autocorrect="off" spellcheck="false"
           class="w-full px-4 py-4 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none text-center text-3xl font-bold shadow-inner bg-white text-slate-800">
       </div>
       
-      <!-- Actions -->
+      <!-- Các nút hành động -->
       <button id="submitBtn" onclick="checkAnswer()" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 transition-all active:scale-95 text-lg">
         Xác nhận
       </button>
@@ -121,10 +108,10 @@
         Tiếp theo <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
       </button>
 
-      <!-- Feedback -->
+      <!-- Phản hồi (Đúng/Sai) -->
       <div id="result" class="min-h-[56px] mt-4 text-lg font-bold flex items-center justify-center rounded-xl bg-slate-50/50 text-center px-2"></div>
 
-      <!-- Stats -->
+      <!-- Chỉ số Điểm & Chuỗi -->
       <div class="mt-6 grid grid-cols-2 gap-4 bg-slate-100/80 p-4 rounded-2xl border border-slate-200">
         <div class="text-center border-r border-slate-300">
           <p class="text-[11px] tracking-widest uppercase text-slate-500 font-bold mb-1">Điểm</p>
@@ -139,7 +126,7 @@
   </div>
 
   <script>
-    // --- DATA ---
+    // --- DỮ LIỆU ---
     const rawValencyData = [
       {q: "H", a: "I"}, {q: "C", a: "II,IV"}, {q: "N", a: "II,III,IV,..."}, {q: "O", a: "II"},
       {q: "Na", a: "I"}, {q: "Mg", a: "II"}, {q: "Al", a: "III"}, {q: "P", a: "III,V"},
@@ -159,7 +146,7 @@
       {q: "Sulfate", a: "SO4"}, {q: "Carbonate", a: "CO3"}, {q: "Ammonium", a: "NH4"}
     ];
 
-    // --- STATE ---
+    // --- TRẠNG THÁI ---
     let mode = "valency";
     let gameData = [];
     let currentIdx = 0;
@@ -167,11 +154,9 @@
     let streak = 0;
     let timer = 30;
     let interval;
-    let player = "";
     let answered = false;
-    let leaderboard = [];
 
-    // --- UTILS ---
+    // --- TIỆN ÍCH ---
     function shuffleArray(array) {
       const newArr = [...array];
       for (let i = newArr.length - 1; i > 0; i--) {
@@ -185,33 +170,13 @@
       return t.replace(/(\d+)/g, '<sub>$1</sub>'); 
     }
 
-    // --- INITIALIZATION ---
-    window.onload = () => {
-      try {
-        const saved = localStorage.getItem("chem_strict_bxh");
-        leaderboard = saved ? JSON.parse(saved) : [];
-        if (!Array.isArray(leaderboard)) leaderboard = [];
-      } catch(e) {
-        leaderboard = [];
-      }
-      showLeaderboard();
-      document.getElementById("playerName").focus();
-    };
-
     function startMode(m) {
-      player = document.getElementById("playerName").value.trim();
-      if (!player) {
-        document.getElementById("nameError").classList.remove("hidden");
-        document.getElementById("playerName").focus();
-        return;
-      }
-      document.getElementById("nameError").classList.add("hidden");
       mode = m;
       score = 0;
       streak = 0;
       currentIdx = 0;
       
-      // Sáo trộn 21 câu hỏi
+      // Khởi tạo và sáo trộn câu hỏi
       gameData = shuffleArray(mode === "valency" ? rawValencyData : rawSymbolData);
       
       updateUI();
@@ -221,13 +186,19 @@
       loadQuestion();
     }
 
+    // Chế độ "Tiếp tục" - giữ nguyên điểm và chuỗi
+    function continueGame() {
+      currentIdx = 0;
+      // Sáo trộn lại danh sách cho lượt tiếp theo
+      gameData = shuffleArray(mode === "valency" ? rawValencyData : rawSymbolData);
+      loadQuestion();
+    }
+
     function goHome() {
-      if (score > 0) saveScore();
       clearInterval(interval);
       document.getElementById("menu").classList.remove("hidden");
       document.getElementById("game").classList.add("hidden");
       document.getElementById("backBtn").classList.add("hidden");
-      showLeaderboard();
     }
 
     function loadQuestion() {
@@ -289,6 +260,7 @@
       let isCorrect = (cleanUser === cleanCorrect);
       let isWarning = false;
 
+      // Xử lý chấp nhận đáp án thiếu ",..." nhưng có cảnh báo
       if (!isCorrect && cleanCorrect.endsWith(",...") && cleanUser === cleanCorrect.slice(0, -4)) {
         isCorrect = true;
         isWarning = true;
@@ -325,17 +297,19 @@
       const resDiv = document.getElementById("result");
       resDiv.innerHTML = `
         <div class="fade-in py-2">
-          <p class="text-blue-600 text-xl font-black">HOÀN THÀNH!</p>
-          <p class="text-slate-600 text-sm">Bạn đúng ${score}/21 câu.</p>
-          <button onclick="goHome()" class="mt-3 px-6 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold shadow-md">Về Menu</button>
+          <p class="text-blue-600 text-xl font-black">HOÀN THÀNH LƯỢT!</p>
+          <p class="text-slate-600 text-sm mb-3">Bạn đang có ${score} điểm và chuỗi ${streak}.</p>
+          <div class="flex flex-col gap-2">
+            <button onclick="continueGame()" class="w-full px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-sm font-bold shadow-md transition-colors">Tiếp tục (Cộng dồn)</button>
+            <button onclick="goHome()" class="w-full px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-sm font-bold transition-colors">Quay về Menu</button>
+          </div>
         </div>
       `;
       document.getElementById("nextBtn").classList.add("hidden");
       document.getElementById("submitBtn").classList.add("hidden");
-      saveScore();
     }
 
-    function enterKey(e) { if (e.key === "Enter") answered ? nextQuestion() : checkAnswer(); }
+    function enterKey(e) { if (e.key === "Enter") answered ? (currentIdx >= 20 ? null : nextQuestion()) : checkAnswer(); }
     
     function toggleButtons(isAnswering) {
       document.getElementById("submitBtn").classList.toggle("hidden", !isAnswering);
@@ -345,40 +319,6 @@
     function updateUI() {
       document.getElementById("score").innerText = score;
       document.getElementById("streak").innerText = streak;
-    }
-
-    function saveScore() {
-      if (!player) return;
-      let idx = leaderboard.findIndex(p => p.name === player);
-      if (idx !== -1) {
-        if (score > leaderboard[idx].score) leaderboard[idx].score = score;
-      } else {
-        leaderboard.push({name: player, score: score});
-      }
-      leaderboard.sort((a, b) => b.score - a.score);
-      leaderboard = leaderboard.slice(0, 3);
-      localStorage.setItem("chem_strict_bxh", JSON.stringify(leaderboard));
-    }
-
-    function showLeaderboard() {
-      const list = document.getElementById("leaderboardList");
-      if (!list) return;
-      list.innerHTML = "";
-      if (leaderboard.length === 0) {
-        list.innerHTML = "<li class='text-center text-slate-400 text-sm py-4 italic'>Chưa có kỷ lục nào</li>";
-        return;
-      }
-      const medals = ["🥇", "🥈", "🥉"];
-      leaderboard.forEach((p, i) => {
-        list.innerHTML += `
-          <li class="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100 shadow-sm text-sm font-medium fade-in">
-            <span class="flex items-center gap-2 overflow-hidden">
-              <span class="text-lg flex-shrink-0">${medals[i] || "🏅"}</span> 
-              <span class="text-slate-700 truncate font-bold uppercase tracking-tight">${p.name}</span>
-            </span>
-            <span class="text-blue-600 font-black bg-blue-50 px-3 py-1 rounded-lg border border-blue-100 flex-shrink-0 ml-2">${p.score}/21</span>
-          </li>`;
-      });
     }
   </script>
 </body>
