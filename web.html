@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ôn Hóa Học Chính Xác</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom Subscript Styling for Chemical Formulas */
+    sub { 
+      font-size: 0.65em; 
+      vertical-align: sub; 
+      font-weight: 600;
+    }
+    
+    /* Glassmorphism Effect */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Wrong Answer Shake Animation */
+    .wrong-shake { 
+      animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; 
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    /* Smooth Input Transition */
+    input {
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 min-h-screen flex items-center justify-center p-4 font-sans text-gray-800 antialiased selection:bg-blue-300 selection:text-blue-900">
+
+  <!-- Back Button (Hidden initially) -->
+  <button id="backBtn" onclick="goHome()" class="hidden fixed top-4 left-4 bg-white/10 hover:bg-white/25 text-white rounded-full w-12 h-12 flex items-center justify-center transition-all duration-200 shadow-lg backdrop-blur-md z-50 border border-white/10 group">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    </svg>
+  </button>
+
+  <div id="mainContainer" class="glass-card rounded-3xl w-full max-w-md p-6 sm:p-8 text-center transition-all duration-300 relative overflow-hidden">
+    
+    <!-- Header -->
+    <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 mb-1 flex justify-center items-center gap-2 drop-shadow-sm">
+      <span class="text-3xl drop-shadow-md">🧪</span> Ôn Hóa Học
+    </h1>
+    <p class="text-xs text-red-500 font-bold mb-6 tracking-wide uppercase">Lưu ý: Phải viết đúng hoa/thường</p>
+
+    <!-- MENU SECTION -->
+    <div id="menu" class="fade-in">
+      <div class="mb-6 relative">
+        <input id="playerName" type="text" placeholder="Nhập tên của bạn để lưu điểm" 
+          class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none text-center text-lg font-semibold text-slate-700 placeholder-slate-400 bg-white/80">
+        <p id="nameError" class="hidden absolute -bottom-6 left-0 right-0 text-red-500 text-sm font-semibold animate-pulse">⚠️ Vui lòng nhập tên của bạn!</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 mb-8 mt-8">
+        <button onclick="startMode('valency')" class="bg-gradient-to-b from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-blue-500/30 transition-all active:scale-95 border border-blue-400/50">
+          Xác định<br>Hóa Trị
+        </button>
+        <button onclick="startMode('symbol')" class="bg-gradient-to-b from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-cyan-500/30 transition-all active:scale-95 border border-cyan-400/50">
+          Viết<br>Kí Hiệu
+        </button>
+      </div>
+
+      <!-- Leaderboard -->
+      <div class="bg-slate-50/80 rounded-2xl p-4 shadow-inner border border-slate-200 backdrop-blur-sm">
+        <h2 class="font-bold text-slate-700 mb-3 flex items-center justify-center gap-2 text-lg">
+          <span class="text-xl">🏆</span> BXH Top 3
+        </h2>
+        <ul id="leaderboard" class="space-y-2 text-left"></ul>
+      </div>
+    </div>
+
+    <!-- GAME SECTION -->
+    <div id="game" class="hidden">
+      <!-- Question & Timer -->
+      <div class="mb-6 relative">
+        <div id="question" class="text-6xl font-black text-slate-800 my-6 tracking-wider drop-shadow-sm h-20 flex items-center justify-center"></div>
+        <div class="inline-flex items-center justify-center gap-2 text-xl font-bold text-slate-600 bg-slate-100/80 border border-slate-200 py-2 px-6 rounded-xl shadow-sm">
+          ⏱️ <span id="timer" class="text-blue-600 w-6 text-center">30</span>s
+        </div>
+      </div>
+
+      <!-- Answer Input -->
+      <div class="relative mb-4">
+        <input id="answer" type="text" onkeydown="enterKey(event)" placeholder="Ví dụ: Na, II, SO4..." autocomplete="off" autocorrect="off" spellcheck="false"
+          class="w-full px-4 py-4 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none text-center text-2xl font-bold shadow-inner bg-white text-slate-800">
+      </div>
+      
+      <!-- Actions -->
+      <button id="submitBtn" onclick="checkAnswer()" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 transition-all active:scale-95 text-lg">
+        Xác nhận
+      </button>
+      <button id="nextBtn" onclick="nextQuestion()" class="hidden w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/30 transition-all active:scale-95 text-lg flex items-center justify-center gap-2">
+        Tiếp theo <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+      </button>
+
+      <!-- Feedback -->
+      <div id="result" class="min-h-[48px] mt-4 text-lg font-bold flex items-center justify-center rounded-xl bg-slate-50/50"></div>
+
+      <!-- Stats -->
+      <div class="mt-6 grid grid-cols-2 gap-4 bg-slate-100/80 p-4 rounded-2xl border border-slate-200">
+        <div class="text-center border-r border-slate-300">
+          <p class="text-[11px] tracking-widest uppercase text-slate-500 font-bold mb-1">Điểm</p>
+          <p id="score" class="font-black text-2xl text-blue-600 drop-shadow-sm">0</p>
+        </div>
+        <div class="text-center">
+          <p class="text-[11px] tracking-widest uppercase text-slate-500 font-bold mb-1">Chuỗi</p>
+          <p id="streak" class="font-black text-2xl text-orange-500 drop-shadow-sm">0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- STATE ---
+    let mode = "valency";
+    let current = 0;
+    let score = 0;
+    let streak = 0;
+    let timer = 30;
+    let interval;
+    let player = "";
+    let answered = false;
+    let leaderboard = JSON.parse(localStorage.getItem("chem_strict_bxh")) || [];
+
+    // --- DATA (Chỉ bao gồm các nguyên tố theo yêu cầu) ---
+    const valencyData = [
+      {q: "H", a: "I"}, {q: "C", a: "IV"}, {q: "N", a: "II,III,IV,..."}, {q: "O", a: "II"},
+      {q: "Na", a: "I"}, {q: "Mg", a: "II"}, {q: "Al", a: "III"}, {q: "P", a: "III,V"},
+      {q: "S", a: "II,IV,VI"}, {q: "Cl", a: "I"}, {q: "K", a: "I,..."}, {q: "Ca", a: "II"},
+      {q: "Fe", a: "II,III"}, {q: "Cu", a: "I,II"}, {q: "Zn", a: "II"},
+      {q: "OH", a: "I"}, {q: "NO3", a: "I"}, {q: "PO4", a: "III"}, 
+      {q: "SO4", a: "II"}, {q: "CO3", a: "II"}, {q: "NH4", a: "I"}
+    ];
+    
+    const symbolData = [
+      {q: "Hydrogen", a: "H"}, {q: "Carbon", a: "C"}, {q: "Nitrogen", a: "N"}, 
+      {q: "Oxygen", a: "O"}, {q: "Sodium", a: "Na"}, {q: "Magnesium", a: "Mg"},
+      {q: "Aluminium", a: "Al"}, {q: "Phosphorus", a: "P"}, {q: "Sulfur", a: "S"},
+      {q: "Chlorine", a: "Cl"}, {q: "Potassium", a: "K"}, {q: "Calcium", a: "Ca"},
+      {q: "Iron", a: "Fe"}, {q: "Copper", a: "Cu"}, {q: "Zinc", a: "Zn"},
+      {q: "Hydroxide", a: "OH"}, {q: "Nitrate", a: "NO3"}, {q: "Phosphate", a: "PO4"},
+      {q: "Sulfate", a: "SO4"}, {q: "Carbonate", a: "CO3"}, {q: "Ammonium", a: "NH4"}
+    ];
+
+    // --- UTILS ---
+    function formatFormula(t) { 
+      if (t.length > 10) return t; 
+      return t.replace(/(\d+)/g, '<sub>$1</sub>'); 
+    }
+
+    // --- NAVIGATION & GAME FLOW ---
+    function startMode(m) {
+      player = document.getElementById("playerName").value.trim();
+      if (!player) {
+        document.getElementById("nameError").classList.remove("hidden");
+        document.getElementById("playerName").focus();
+        return;
+      }
+      document.getElementById("nameError").classList.add("hidden");
+      
+      mode = m; 
+      score = 0; 
+      streak = 0;
+      updateUI();
+      
+      document.getElementById("menu").classList.add("hidden");
+      document.getElementById("game").classList.remove("hidden");
+      document.getElementById("backBtn").classList.remove("hidden");
+      
+      pickRandomQuestion();
+    }
+
+    function goHome() {
+      if (score > 0) saveScore();
+      clearInterval(interval);
+      document.getElementById("menu").classList.remove("hidden");
+      document.getElementById("game").classList.add("hidden");
+      document.getElementById("backBtn").classList.add("hidden");
+      showLeaderboard();
+    }
+
+    // --- LOGIC ---
+    function pickRandomQuestion() {
+      let data = mode === "valency" ? valencyData : symbolData;
+      let last = current;
+      do { 
+        current = Math.floor(Math.random() * data.length); 
+      } while (current === last && data.length > 1);
+      
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      let data = mode === "valency" ? valencyData : symbolData;
+      document.getElementById("question").innerHTML = formatFormula(data[current].q);
+      
+      const input = document.getElementById("answer");
+      input.value = "";
+      input.disabled = false;
+      input.focus();
+      
+      document.getElementById("result").innerHTML = "";
+      answered = false;
+      
+      toggleButtons(true);
+      startTimer();
+    }
+
+    function startTimer() {
+      clearInterval(interval);
+      timer = 30;
+      document.getElementById("timer").innerText = timer;
+      document.getElementById("timer").classList.remove("text-red-500", "animate-pulse");
+      
+      interval = setInterval(() => {
+        timer--;
+        const timerEl = document.getElementById("timer");
+        timerEl.innerText = timer;
+        if (timer <= 5) timerEl.classList.add("text-red-500", "animate-pulse");
+        if (timer <= 0) { 
+          clearInterval(interval); 
+          handleTimeOut(); 
+        }
+      }, 1000);
+    }
+
+    function handleTimeOut() {
+      if (answered) return;
+      answered = true;
+      let correct = (mode === "valency" ? valencyData : symbolData)[current].a;
+      document.getElementById("result").innerHTML = `<span class="text-red-500 font-bold bg-red-100/50 px-4 py-2 rounded-lg inline-block w-full text-sm sm:text-base">Hết giờ! Đáp án: ${correct}</span>`;
+      streak = 0;
+      document.getElementById("answer").disabled = true;
+      toggleButtons(false);
+      updateUI();
+    }
+
+    function checkAnswer() {
+      if (answered) return;
+      let user = document.getElementById("answer").value.trim();
+      if (!user) {
+        document.getElementById("answer").focus();
+        return;
+      }
+      
+      clearInterval(interval);
+      answered = true;
+      document.getElementById("answer").disabled = true;
+
+      let data = mode === "valency" ? valencyData : symbolData;
+      let correct = data[current].a;
+      
+      let isCorrect = false;
+      let isWarning = false;
+      let cleanUser = user.replace(/\s+/g, '');
+      let cleanCorrect = correct.replace(/\s+/g, '');
+
+      if (cleanUser === cleanCorrect) {
+        isCorrect = true;
+      } else if (cleanCorrect.endsWith(",...") && cleanUser === cleanCorrect.slice(0, -4)) {
+        isCorrect = true;
+        isWarning = true;
+      }
+
+      const resDiv = document.getElementById("result");
+      const container = document.getElementById("mainContainer");
+
+      if (isCorrect) {
+        if (isWarning) {
+          resDiv.innerHTML = `<span class="text-orange-600 font-bold bg-orange-100/50 px-4 py-2 rounded-lg inline-block w-full text-[13px] sm:text-sm leading-tight">⚠️ Tạm đúng! Khi thi nhớ ghi thêm <b>,...</b> (Đáp án: ${correct})</span>`;
+        } else {
+          resDiv.innerHTML = `<span class="text-emerald-600 font-bold bg-emerald-100/50 px-4 py-2 rounded-lg inline-block w-full">✅ CHÍNH XÁC</span>`;
+        }
+        score++; 
+        streak++;
+      } else {
+        container.classList.add("wrong-shake");
+        setTimeout(() => container.classList.remove("wrong-shake"), 400);
+        resDiv.innerHTML = `<span class="text-red-600 text-[13px] sm:text-sm font-semibold bg-red-100/50 px-4 py-2 rounded-lg inline-block w-full leading-tight">❌ SAI! Phải nhập đủ: <b class="text-red-700 text-base">${correct}</b></span>`;
+        streak = 0;
+      }
+      
+      toggleButtons(false);
+      updateUI();
+    }
+
+    function nextQuestion() { pickRandomQuestion(); }
+    function enterKey(e) { if (e.key === "Enter") answered ? nextQuestion() : checkAnswer(); }
+
+    function toggleButtons(isAnswering) {
+      document.getElementById("submitBtn").classList.toggle("hidden", !isAnswering);
+      document.getElementById("nextBtn").classList.toggle("hidden", isAnswering);
+      if (!isAnswering) setTimeout(() => document.getElementById("nextBtn").focus(), 100);
+    }
+
+    function updateUI() {
+      document.getElementById("score").innerText = score;
+      document.getElementById("streak").innerText = streak;
+    }
+
+    function saveScore() {
+      let idx = leaderboard.findIndex(p => p.name === player);
+      if (idx !== -1) {
+        if (score > leaderboard[idx].score) leaderboard[idx].score = score;
+      } else {
+        leaderboard.push({name: player, score: score});
+      }
+      leaderboard.sort((a, b) => b.score - a.score);
+      leaderboard = leaderboard.slice(0, 3);
+      localStorage.setItem("chem_strict_bxh", JSON.stringify(leaderboard));
+    }
+
+    function showLeaderboard() {
+      const list = document.getElementById("leaderboard");
+      list.innerHTML = leaderboard.length ? "" : "<li class='text-center text-slate-400 text-sm py-2 font-medium'>Chưa có kỷ lục nào</li>";
+      const medals = ["🥇", "🥈", "🥉"];
+      leaderboard.forEach((p, i) => {
+        list.innerHTML += `
+          <li class="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100 shadow-sm text-sm font-medium transition-transform hover:scale-[1.02]">
+            <span class="flex items-center gap-2">
+              <span class="text-lg">${medals[i] || "🏅"}</span> 
+              <span class="text-slate-700 truncate max-w-[150px]">${p.name}</span>
+            </span>
+            <span class="text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded-md">${p.score} đ</span>
+          </li>`;
+      });
+    }
+
+    window.onload = () => {
+      showLeaderboard();
+      const nameInput = document.getElementById("playerName");
+      nameInput.focus();
+      nameInput.addEventListener("input", () => {
+        document.getElementById("nameError").classList.add("hidden");
+      });
+    };
+  </script>
+</body>
+</html>
