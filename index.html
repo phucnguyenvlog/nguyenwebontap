@@ -13,13 +13,71 @@
       font-weight: 600;
     }
     
+    /* Hiệu ứng Nền Gradient chuyển động */
+    .animated-bg {
+      background: linear-gradient(-45deg, #0f172a, #1e1b4b, #064e3b, #0c4a6e);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Hiệu ứng bọt khí hóa học (Bubbles) */
+    .bubbles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      pointer-events: none;
+    }
+
+    .bubbles li {
+      position: absolute;
+      display: block;
+      list-style: none;
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: floatUp 20s linear infinite;
+      bottom: -150px;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(255,255,255,0.05);
+    }
+
+    /* Tùy chỉnh từng bọt khí (vị trí, kích thước, màu sắc, tốc độ) */
+    .bubbles li:nth-child(1) { left: 25%; width: 80px; height: 80px; animation-delay: 0s; background: rgba(56, 189, 248, 0.15); }
+    .bubbles li:nth-child(2) { left: 10%; width: 30px; height: 30px; animation-delay: 2s; animation-duration: 12s; background: rgba(52, 211, 153, 0.15); }
+    .bubbles li:nth-child(3) { left: 70%; width: 25px; height: 25px; animation-delay: 4s; }
+    .bubbles li:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; background: rgba(167, 139, 250, 0.15); }
+    .bubbles li:nth-child(5) { left: 65%; width: 20px; height: 20px; animation-delay: 0s; }
+    .bubbles li:nth-child(6) { left: 75%; width: 90px; height: 90px; animation-delay: 3s; background: rgba(56, 189, 248, 0.1); }
+    .bubbles li:nth-child(7) { left: 35%; width: 120px; height: 120px; animation-delay: 7s; background: rgba(52, 211, 153, 0.05); }
+    .bubbles li:nth-child(8) { left: 50%; width: 25px; height: 25px; animation-delay: 15s; animation-duration: 25s; }
+    .bubbles li:nth-child(9) { left: 20%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 15s; background: rgba(167, 139, 250, 0.2); }
+    .bubbles li:nth-child(10) { left: 85%; width: 100px; height: 100px; animation-delay: 0s; animation-duration: 11s; }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 50%; }
+      100% { transform: translateY(-1200px) rotate(720deg); opacity: 0; border-radius: 40%; }
+    }
+
     /* Hiệu ứng Glassmorphism */
     .glass-card {
-      background: rgba(255, 255, 255, 0.95);
-      box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     /* Hiệu ứng rung khi trả lời sai */
@@ -47,17 +105,28 @@
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 min-h-screen flex items-center justify-center p-4 font-sans text-gray-800 antialiased">
+<body class="animated-bg min-h-screen flex items-center justify-center p-4 font-sans text-gray-800 antialiased relative">
+
+  <!-- Bọt khí nền (Floating Bubbles) -->
+  <ul class="bubbles">
+    <li></li><li></li><li></li><li></li><li></li>
+    <li></li><li></li><li></li><li></li><li></li>
+  </ul>
 
   <!-- Nút Quay lại Menu chính -->
-  <button id="backBtn" onclick="goHome()" class="hidden fixed top-4 left-4 bg-white/10 hover:bg-white/25 text-white rounded-full w-12 h-12 flex items-center justify-center transition-all duration-200 shadow-lg backdrop-blur-md z-50 border border-white/10 group">
+  <button id="backBtn" onclick="goHome()" class="hidden fixed top-4 left-4 bg-white/10 hover:bg-white/25 text-white rounded-full w-12 h-12 flex items-center justify-center transition-all duration-200 shadow-lg backdrop-blur-md z-50 border border-white/20 group">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
     </svg>
   </button>
 
-  <div id="mainContainer" class="glass-card rounded-3xl w-full max-w-md p-6 sm:p-8 text-center transition-all duration-300 relative overflow-hidden">
+  <div id="mainContainer" class="glass-card rounded-3xl w-full max-w-md p-6 sm:p-8 text-center transition-all duration-300 relative overflow-hidden z-10">
     
+    <!-- Nút âm thanh -->
+    <button onclick="toggleSound()" id="soundBtn" class="absolute top-5 right-5 text-2xl hover:scale-110 transition-transform focus:outline-none z-20 drop-shadow-md" title="Bật/Tắt âm thanh">
+      🔊
+    </button>
+
     <!-- Tiêu đề -->
     <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 mb-1 flex justify-center items-center gap-2 drop-shadow-sm">
       <span class="text-3xl drop-shadow-md">🧪</span> Ôn Hóa Học
@@ -66,7 +135,7 @@
 
     <!-- GIAO DIỆN MENU -->
     <div id="menu" class="fade-in">
-      <p class="text-slate-500 text-sm mb-8">Chọn chế độ để bắt đầu lượt chơi 21 câu hỏi</p>
+      <p class="text-slate-500 text-sm mb-8 font-medium">Chọn chế độ để bắt đầu lượt chơi 21 câu hỏi</p>
       
       <div class="grid grid-cols-1 gap-4 mb-4 mt-4">
         <button onclick="startMode('valency')" class="bg-gradient-to-b from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-5 px-4 rounded-2xl shadow-lg shadow-blue-500/30 transition-all active:scale-95 border border-blue-400/50 text-xl">
@@ -82,7 +151,7 @@
     <div id="game" class="hidden">
       <!-- Thanh tiến trình -->
       <div class="w-full bg-slate-200 rounded-full h-1.5 mb-4">
-        <div id="progressBar" class="bg-blue-600 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+        <div id="progressBar" class="bg-blue-600 h-1.5 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(37,99,235,0.5)]" style="width: 0%"></div>
       </div>
       <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Câu hỏi <span id="currentQuestionNum">1</span>/21</p>
 
@@ -97,7 +166,7 @@
       <!-- Ô nhập đáp án -->
       <div class="relative mb-4">
         <input id="answer" type="text" onkeydown="enterKey(event)" placeholder="Nhập đáp án..." autocomplete="off" autocorrect="off" spellcheck="false"
-          class="w-full px-4 py-4 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none text-center text-3xl font-bold shadow-inner bg-white text-slate-800">
+          class="w-full px-4 py-4 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none text-center text-3xl font-bold shadow-inner bg-white text-slate-800 transition-all duration-200">
       </div>
       
       <!-- Các nút hành động -->
@@ -156,6 +225,66 @@
     let interval;
     let answered = false;
 
+    // --- ÂM THANH (WEB AUDIO API) ---
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+    let isSoundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function toggleSound() {
+      isSoundEnabled = !isSoundEnabled;
+      document.getElementById("soundBtn").innerText = isSoundEnabled ? "🔊" : "🔇";
+      if (isSoundEnabled) {
+        initAudio();
+        playSound('click');
+      }
+    }
+
+    function playTone(freq, type, duration, vol=0.1) {
+      if (!isSoundEnabled) return;
+      initAudio();
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      oscillator.type = type;
+      oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      oscillator.start();
+      oscillator.stop(audioCtx.currentTime + duration);
+    }
+
+    function playSound(type) {
+      if (!isSoundEnabled) return;
+      switch(type) {
+        case 'correct':
+          playTone(600, 'sine', 0.1, 0.1);
+          setTimeout(() => playTone(800, 'sine', 0.15, 0.1), 100);
+          break;
+        case 'wrong':
+          playTone(250, 'sawtooth', 0.2, 0.1);
+          setTimeout(() => playTone(200, 'sawtooth', 0.3, 0.1), 150);
+          break;
+        case 'timeout':
+          playTone(400, 'square', 0.3, 0.05);
+          setTimeout(() => playTone(300, 'square', 0.4, 0.05), 150);
+          break;
+        case 'click':
+          playTone(800, 'sine', 0.05, 0.05);
+          break;
+        case 'complete':
+          [400, 500, 600, 800].forEach((freq, i) => {
+            setTimeout(() => playTone(freq, 'sine', 0.2, 0.1), i * 150);
+          });
+          break;
+      }
+    }
+
     // --- TIỆN ÍCH ---
     function shuffleArray(array) {
       const newArr = [...array];
@@ -171,6 +300,7 @@
     }
 
     function startMode(m) {
+      playSound('click');
       mode = m;
       score = 0;
       streak = 0;
@@ -188,6 +318,7 @@
 
     // Chế độ "Tiếp tục" - giữ nguyên điểm và chuỗi
     function continueGame() {
+      playSound('click');
       currentIdx = 0;
       // Sáo trộn lại danh sách cho lượt tiếp theo
       gameData = shuffleArray(mode === "valency" ? rawValencyData : rawSymbolData);
@@ -195,6 +326,7 @@
     }
 
     function goHome() {
+      playSound('click');
       clearInterval(interval);
       document.getElementById("menu").classList.remove("hidden");
       document.getElementById("game").classList.add("hidden");
@@ -236,6 +368,7 @@
     function handleTimeOut() {
       if (answered) return;
       answered = true;
+      playSound('timeout');
       let correct = gameData[currentIdx].a;
       document.getElementById("result").innerHTML = `<span class="text-red-500 font-bold bg-red-100/50 px-4 py-2 rounded-lg inline-block w-full text-sm">Hết giờ! Đáp án: ${correct}</span>`;
       streak = 0;
@@ -270,6 +403,7 @@
       const container = document.getElementById("mainContainer");
 
       if (isCorrect) {
+        playSound('correct');
         if (isWarning) {
           resDiv.innerHTML = `<span class="text-orange-600 font-bold bg-orange-100/50 px-4 py-2 rounded-lg inline-block w-full text-xs sm:text-sm">⚠️ Tạm đúng! Nhớ thêm <b>,...</b> (Đáp án: ${correct})</span>`;
         } else {
@@ -277,6 +411,7 @@
         }
         score++; streak++;
       } else {
+        playSound('wrong');
         container.classList.add("wrong-shake");
         setTimeout(() => container.classList.remove("wrong-shake"), 400);
         resDiv.innerHTML = `<span class="text-red-600 text-xs sm:text-sm font-semibold bg-red-100/50 px-4 py-2 rounded-lg inline-block w-full leading-tight">❌ SAI! Đáp án: <b class="text-red-700 text-base">${correct}</b></span>`;
@@ -287,11 +422,13 @@
     }
 
     function nextQuestion() {
+      playSound('click');
       currentIdx++;
       loadQuestion();
     }
 
     function endGame() {
+      playSound('complete');
       clearInterval(interval);
       document.getElementById("progressBar").style.width = "100%";
       const resDiv = document.getElementById("result");
