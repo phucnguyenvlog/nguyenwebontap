@@ -3,19 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ôn Hóa Học Chính Xác</title>
+  <title>Ôn Hóa Học - Âm Thanh Riêng Biệt</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Tùy chỉnh hiển thị chỉ số dưới cho công thức hóa học */
     sub { 
       font-size: 0.65em; 
       vertical-align: sub; 
       font-weight: 600;
     }
     
-    /* Hiệu ứng Nền Gradient chuyển động */
     .animated-bg {
-      background: linear-gradient(-45deg, #0f172a, #1e1b4b, #064e3b, #0c4a6e);
+      background: linear-gradient(-45deg, #1e40af, #6d28d9, #059669, #1d4ed8);
       background-size: 400% 400%;
       animation: gradientBG 15s ease infinite;
     }
@@ -26,7 +24,6 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Hiệu ứng bọt khí hóa học (Bubbles) */
     .bubbles {
       position: fixed;
       top: 0;
@@ -35,8 +32,6 @@
       height: 100%;
       z-index: 0;
       overflow: hidden;
-      margin: 0;
-      padding: 0;
       pointer-events: none;
     }
 
@@ -44,43 +39,32 @@
       position: absolute;
       display: block;
       list-style: none;
-      width: 20px;
-      height: 20px;
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.2);
       animation: floatUp 20s linear infinite;
       bottom: -150px;
       border-radius: 50%;
-      box-shadow: 0 0 10px rgba(255,255,255,0.05);
     }
 
-    /* Tùy chỉnh từng bọt khí (vị trí, kích thước, màu sắc, tốc độ) */
-    .bubbles li:nth-child(1) { left: 25%; width: 80px; height: 80px; animation-delay: 0s; background: rgba(56, 189, 248, 0.15); }
-    .bubbles li:nth-child(2) { left: 10%; width: 30px; height: 30px; animation-delay: 2s; animation-duration: 12s; background: rgba(52, 211, 153, 0.15); }
+    .bubbles li:nth-child(1) { left: 25%; width: 80px; height: 80px; animation-delay: 0s; }
+    .bubbles li:nth-child(2) { left: 10%; width: 30px; height: 30px; animation-delay: 2s; }
     .bubbles li:nth-child(3) { left: 70%; width: 25px; height: 25px; animation-delay: 4s; }
-    .bubbles li:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; background: rgba(167, 139, 250, 0.15); }
-    .bubbles li:nth-child(5) { left: 65%; width: 20px; height: 20px; animation-delay: 0s; }
-    .bubbles li:nth-child(6) { left: 75%; width: 90px; height: 90px; animation-delay: 3s; background: rgba(56, 189, 248, 0.1); }
-    .bubbles li:nth-child(7) { left: 35%; width: 120px; height: 120px; animation-delay: 7s; background: rgba(52, 211, 153, 0.05); }
-    .bubbles li:nth-child(8) { left: 50%; width: 25px; height: 25px; animation-delay: 15s; animation-duration: 25s; }
-    .bubbles li:nth-child(9) { left: 20%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 15s; background: rgba(167, 139, 250, 0.2); }
-    .bubbles li:nth-child(10) { left: 85%; width: 100px; height: 100px; animation-delay: 0s; animation-duration: 11s; }
+    .bubbles li:nth-child(4) { left: 40%; width: 60px; height: 60px; }
+    .bubbles li:nth-child(5) { left: 65%; width: 20px; height: 20px; }
 
     @keyframes floatUp {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 50%; }
-      100% { transform: translateY(-1200px) rotate(720deg); opacity: 0; border-radius: 40%; }
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-1200px) rotate(720deg); opacity: 0; }
     }
 
-    /* Hiệu ứng Glassmorphism */
     .glass-card {
-      background: rgba(255, 255, 255, 0.92);
-      box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 15px 50px -10px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
     }
 
-    /* Hiệu ứng rung khi trả lời sai */
     .wrong-shake { 
       animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; 
     }
@@ -91,10 +75,6 @@
       40%, 80% { transform: translateX(6px); }
     }
 
-    input {
-      transition: all 0.3s ease;
-    }
-    
     .fade-in {
       animation: fadeIn 0.3s ease-in;
     }
@@ -105,97 +85,85 @@
     }
   </style>
 </head>
-<body class="animated-bg min-h-screen flex items-center justify-center p-4 font-sans text-gray-800 antialiased relative">
+<body class="animated-bg min-h-screen flex items-center justify-center p-4 font-sans text-gray-900 antialiased relative">
 
-  <!-- Bọt khí nền (Floating Bubbles) -->
   <ul class="bubbles">
-    <li></li><li></li><li></li><li></li><li></li>
     <li></li><li></li><li></li><li></li><li></li>
   </ul>
 
-  <!-- Nút Quay lại Menu chính -->
-  <button id="backBtn" onclick="goHome()" class="hidden fixed top-4 left-4 bg-white/10 hover:bg-white/25 text-white rounded-full w-12 h-12 flex items-center justify-center transition-all duration-200 shadow-lg backdrop-blur-md z-50 border border-white/20 group">
+  <!-- Điều khiển Âm thanh -->
+  <div class="fixed top-5 right-5 flex gap-2 z-50">
+    <!-- Nút Nhạc Nền -->
+    <button onclick="toggleBGM()" id="bgmBtn" class="flex items-center gap-2 bg-white/80 hover:bg-white p-3 rounded-2xl shadow-lg border border-white/50 transition-all active:scale-90 group" title="Nhạc nền">
+      <span id="bgmIcon" class="text-xl">🎵</span>
+      <span class="text-[10px] font-bold uppercase text-slate-500 group-hover:text-blue-600 hidden sm:block">Nhạc</span>
+    </button>
+    <!-- Nút Hiệu Ứng -->
+    <button onclick="toggleSFX()" id="sfxBtn" class="flex items-center gap-2 bg-white/80 hover:bg-white p-3 rounded-2xl shadow-lg border border-white/50 transition-all active:scale-90 group" title="Hiệu ứng âm thanh">
+      <span id="sfxIcon" class="text-xl">🔔</span>
+      <span class="text-[10px] font-bold uppercase text-slate-500 group-hover:text-blue-600 hidden sm:block">Hiệu ứng</span>
+    </button>
+  </div>
+
+  <button id="backBtn" onclick="goHome()" class="hidden fixed top-5 left-5 bg-white/60 hover:bg-white text-blue-700 rounded-2xl w-12 h-12 flex items-center justify-center transition-all duration-200 shadow-lg backdrop-blur-md z-50 border border-white/50 group">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
     </svg>
   </button>
 
-  <div id="mainContainer" class="glass-card rounded-3xl w-full max-w-md p-6 sm:p-8 text-center transition-all duration-300 relative overflow-hidden z-10">
+  <div id="mainContainer" class="glass-card rounded-[2rem] w-full max-w-md p-8 text-center relative overflow-hidden z-10 transition-all duration-500">
     
-    <!-- Nút âm thanh -->
-    <button onclick="toggleSound()" id="soundBtn" class="absolute top-5 right-5 text-2xl hover:scale-110 transition-transform focus:outline-none z-20 drop-shadow-md" title="Bật/Tắt âm thanh">
-      🔊
-    </button>
-
-    <!-- Tiêu đề -->
-    <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 mb-1 flex justify-center items-center gap-2 drop-shadow-sm">
-      <span class="text-3xl drop-shadow-md">🧪</span> Ôn Hóa Học
+    <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-600 mb-1 drop-shadow-sm">
+      🧪 Ôn Hóa Học
     </h1>
-    <p class="text-xs text-red-500 font-bold mb-6 tracking-wide uppercase">Lưu ý: Phải viết đúng hoa/thường</p>
+    <p class="text-[10px] text-red-600 font-black mb-8 tracking-widest uppercase opacity-80">Hoa/Thường quan trọng</p>
 
-    <!-- GIAO DIỆN MENU -->
-    <div id="menu" class="fade-in">
-      <p class="text-slate-500 text-sm mb-8 font-medium">Chọn chế độ để bắt đầu lượt chơi 21 câu hỏi</p>
-      
-      <div class="grid grid-cols-1 gap-4 mb-4 mt-4">
-        <button onclick="startMode('valency')" class="bg-gradient-to-b from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-5 px-4 rounded-2xl shadow-lg shadow-blue-500/30 transition-all active:scale-95 border border-blue-400/50 text-xl">
-          Ôn tập Hóa Trị
-        </button>
-        <button onclick="startMode('symbol')" class="bg-gradient-to-b from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white font-bold py-5 px-4 rounded-2xl shadow-lg shadow-cyan-500/30 transition-all active:scale-95 border border-cyan-400/50 text-xl">
-          Ôn tập Kí Hiệu
-        </button>
-      </div>
+    <!-- MENU -->
+    <div id="menu" class="fade-in space-y-4">
+      <button onclick="startMode('valency')" class="w-full bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-6 px-4 rounded-2xl shadow-xl shadow-blue-500/30 transition-all active:scale-[0.98] border border-blue-400/30 text-xl">
+        Ôn tập Hóa Trị
+      </button>
+      <button onclick="startMode('symbol')" class="w-full bg-gradient-to-br from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-bold py-6 px-4 rounded-2xl shadow-xl shadow-indigo-500/30 transition-all active:scale-[0.98] border border-indigo-400/30 text-xl">
+        Ôn tập Kí Hiệu
+      </button>
     </div>
 
-    <!-- GIAO DIỆN TRÒ CHƠI -->
+    <!-- GAME -->
     <div id="game" class="hidden">
-      <!-- Thanh tiến trình -->
-      <div class="w-full bg-slate-200 rounded-full h-1.5 mb-4">
-        <div id="progressBar" class="bg-blue-600 h-1.5 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(37,99,235,0.5)]" style="width: 0%"></div>
-      </div>
-      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Câu hỏi <span id="currentQuestionNum">1</span>/21</p>
-
-      <!-- Câu hỏi & Đồng hồ -->
-      <div class="mb-4 relative">
-        <div id="question" class="text-6xl font-black text-slate-800 my-4 tracking-wider drop-shadow-sm h-24 flex items-center justify-center leading-none"></div>
-        <div class="inline-flex items-center justify-center gap-2 text-lg font-bold text-slate-600 bg-slate-100/80 border border-slate-200 py-1.5 px-5 rounded-xl shadow-sm">
-          ⏱️ <span id="timer" class="text-blue-600 w-8 text-center">30</span>s
-        </div>
+      <div class="w-full bg-slate-200 rounded-full h-2 mb-6 overflow-hidden p-0.5 border border-slate-300">
+        <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
       </div>
 
-      <!-- Ô nhập đáp án -->
-      <div class="relative mb-4">
-        <input id="answer" type="text" onkeydown="enterKey(event)" placeholder="Nhập đáp án..." autocomplete="off" autocorrect="off" spellcheck="false"
-          class="w-full px-4 py-4 rounded-xl border-2 border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none text-center text-3xl font-bold shadow-inner bg-white text-slate-800 transition-all duration-200">
-      </div>
+      <div id="question" class="text-7xl font-black text-slate-800 my-6 drop-shadow-sm h-24 flex items-center justify-center"></div>
       
-      <!-- Các nút hành động -->
-      <button id="submitBtn" onclick="checkAnswer()" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 transition-all active:scale-95 text-lg">
-        Xác nhận
-      </button>
-      <button id="nextBtn" onclick="nextQuestion()" class="hidden w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/30 transition-all active:scale-95 text-lg flex items-center justify-center gap-2">
-        Tiếp theo <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-      </button>
-
-      <!-- Phản hồi (Đúng/Sai) -->
-      <div id="result" class="min-h-[56px] mt-4 text-lg font-bold flex items-center justify-center rounded-xl bg-slate-50/50 text-center px-2"></div>
-
-      <!-- Chỉ số Điểm & Chuỗi -->
-      <div class="mt-6 grid grid-cols-2 gap-4 bg-slate-100/80 p-4 rounded-2xl border border-slate-200">
-        <div class="text-center border-r border-slate-300">
-          <p class="text-[11px] tracking-widest uppercase text-slate-500 font-bold mb-1">Điểm</p>
-          <p id="score" class="font-black text-2xl text-blue-600 drop-shadow-sm">0</p>
+      <div class="mb-6">
+        <div class="inline-flex items-center gap-2 text-sm font-bold text-slate-500 bg-slate-100 py-2 px-6 rounded-full border border-slate-200 shadow-inner">
+          ⏱️ <span id="timer" class="text-blue-600 w-6">30</span> Giây còn lại
         </div>
-        <div class="text-center">
-          <p class="text-[11px] tracking-widest uppercase text-slate-500 font-bold mb-1">Chuỗi</p>
-          <p id="streak" class="font-black text-2xl text-orange-500 drop-shadow-sm">0</p>
+      </div>
+
+      <input id="answer" type="text" onkeydown="enterKey(event)" placeholder="Nhập vào đây..." autocomplete="off"
+        class="w-full px-4 py-5 rounded-2xl border-2 border-slate-200 focus:border-blue-500 outline-none text-center text-3xl font-bold shadow-sm bg-white mb-4 transition-all">
+      
+      <button id="submitBtn" onclick="checkAnswer()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 rounded-2xl shadow-lg transition-all active:scale-95 text-lg">Xác nhận</button>
+      <button id="nextBtn" onclick="nextQuestion()" class="hidden w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-5 rounded-2xl shadow-lg transition-all active:scale-95 text-lg">Tiếp theo →</button>
+
+      <div id="result" class="min-h-[60px] mt-6 flex items-center justify-center"></div>
+
+      <div class="mt-8 flex justify-between gap-4">
+        <div class="flex-1 bg-blue-50 p-3 rounded-2xl border border-blue-100">
+          <p class="text-[9px] uppercase font-bold text-blue-400">Điểm số</p>
+          <p id="score" class="text-2xl font-black text-blue-700">0</p>
+        </div>
+        <div class="flex-1 bg-orange-50 p-3 rounded-2xl border border-orange-100">
+          <p class="text-[9px] uppercase font-bold text-orange-400">Chuỗi đúng</p>
+          <p id="streak" class="text-2xl font-black text-orange-600">0</p>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    // --- DỮ LIỆU ---
     const rawValencyData = [
       {q: "H", a: "I"}, {q: "C", a: "II,IV"}, {q: "N", a: "II,III,IV,..."}, {q: "O", a: "II"},
       {q: "Na", a: "I"}, {q: "Mg", a: "II"}, {q: "Al", a: "III"}, {q: "P", a: "III,V"},
@@ -215,7 +183,6 @@
       {q: "Sulfate", a: "SO4"}, {q: "Carbonate", a: "CO3"}, {q: "Ammonium", a: "NH4"}
     ];
 
-    // --- TRẠNG THÁI ---
     let mode = "valency";
     let gameData = [];
     let currentIdx = 0;
@@ -225,125 +192,116 @@
     let interval;
     let answered = false;
 
-    // --- ÂM THANH (WEB AUDIO API) ---
+    // --- HỆ THỐNG ÂM THANH ---
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx;
-    let isSoundEnabled = true;
+    let isBGMEnabled = true;
+    let isSFXEnabled = true;
+    let bgmInterval;
 
     function initAudio() {
       if (!audioCtx) audioCtx = new AudioContext();
       if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
-    function toggleSound() {
-      isSoundEnabled = !isSoundEnabled;
-      document.getElementById("soundBtn").innerText = isSoundEnabled ? "🔊" : "🔇";
-      if (isSoundEnabled) {
-        initAudio();
-        playSound('click');
-      }
+    function toggleBGM() {
+      initAudio();
+      isBGMEnabled = !isBGMEnabled;
+      document.getElementById("bgmIcon").innerText = isBGMEnabled ? "🎵" : "🔇";
+      document.getElementById("bgmBtn").classList.toggle("opacity-50", !isBGMEnabled);
+      if (isBGMEnabled) playBGM();
+      else if (bgmInterval) { clearInterval(bgmInterval); bgmInterval = null; }
     }
 
-    function playTone(freq, type, duration, vol=0.1) {
-      if (!isSoundEnabled) return;
+    function toggleSFX() {
       initAudio();
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
-      oscillator.type = type;
-      oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
-      gainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-      oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-      oscillator.start();
-      oscillator.stop(audioCtx.currentTime + duration);
+      isSFXEnabled = !isSFXEnabled;
+      document.getElementById("sfxIcon").innerText = isSFXEnabled ? "🔔" : "🔕";
+      document.getElementById("sfxBtn").classList.toggle("opacity-50", !isSFXEnabled);
+      if (isSFXEnabled) playSound('click');
+    }
+
+    function playBGM() {
+      if (bgmInterval) clearInterval(bgmInterval);
+      const chords = [
+        [261.63, 329.63, 392.00], // C
+        [220.00, 261.63, 329.63], // Am
+        [174.61, 220.00, 261.63], // F
+        [196.00, 246.94, 293.66]  // G
+      ];
+      let chordIdx = 0;
+      bgmInterval = setInterval(() => {
+        if (!isBGMEnabled || !audioCtx) return;
+        chords[chordIdx].forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0, audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 3);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 3);
+        });
+        chordIdx = (chordIdx + 1) % chords.length;
+      }, 2000);
     }
 
     function playSound(type) {
-      if (!isSoundEnabled) return;
+      if (!isSFXEnabled || !audioCtx) return;
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      
       switch(type) {
         case 'correct':
-          playTone(600, 'sine', 0.1, 0.1);
-          setTimeout(() => playTone(800, 'sine', 0.15, 0.1), 100);
+          osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
           break;
         case 'wrong':
-          playTone(250, 'sawtooth', 0.2, 0.1);
-          setTimeout(() => playTone(200, 'sawtooth', 0.3, 0.1), 150);
-          break;
-        case 'timeout':
-          playTone(400, 'square', 0.3, 0.05);
-          setTimeout(() => playTone(300, 'square', 0.4, 0.05), 150);
+          osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+          osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.2);
+          gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
           break;
         case 'click':
-          playTone(800, 'sine', 0.05, 0.05);
-          break;
-        case 'complete':
-          [400, 500, 600, 800].forEach((freq, i) => {
-            setTimeout(() => playTone(freq, 'sine', 0.2, 0.1), i * 150);
-          });
+          osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
           break;
       }
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.3);
     }
 
-    // --- TIỆN ÍCH ---
+    // --- LOGIC TRÒ CHƠI ---
     function shuffleArray(array) {
-      const newArr = [...array];
-      for (let i = newArr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
-      }
-      return newArr;
-    }
-
-    function formatFormula(t) { 
-      return t.replace(/(\d+)/g, '<sub>$1</sub>'); 
+      return [...array].sort(() => Math.random() - 0.5);
     }
 
     function startMode(m) {
+      initAudio();
+      if (isBGMEnabled && !bgmInterval) playBGM();
       playSound('click');
       mode = m;
-      score = 0;
-      streak = 0;
-      currentIdx = 0;
-      
-      // Khởi tạo và sáo trộn câu hỏi
+      score = 0; streak = 0; currentIdx = 0;
       gameData = shuffleArray(mode === "valency" ? rawValencyData : rawSymbolData);
-      
-      updateUI();
       document.getElementById("menu").classList.add("hidden");
       document.getElementById("game").classList.remove("hidden");
       document.getElementById("backBtn").classList.remove("hidden");
+      updateUI();
       loadQuestion();
-    }
-
-    // Chế độ "Tiếp tục" - giữ nguyên điểm và chuỗi
-    function continueGame() {
-      playSound('click');
-      currentIdx = 0;
-      // Sáo trộn lại danh sách cho lượt tiếp theo
-      gameData = shuffleArray(mode === "valency" ? rawValencyData : rawSymbolData);
-      loadQuestion();
-    }
-
-    function goHome() {
-      playSound('click');
-      clearInterval(interval);
-      document.getElementById("menu").classList.remove("hidden");
-      document.getElementById("game").classList.add("hidden");
-      document.getElementById("backBtn").classList.add("hidden");
     }
 
     function loadQuestion() {
-      if (currentIdx >= 21) {
-        endGame();
-        return;
-      }
-      
-      const qData = gameData[currentIdx];
-      document.getElementById("question").innerHTML = formatFormula(qData.q);
-      document.getElementById("currentQuestionNum").innerText = currentIdx + 1;
-      document.getElementById("progressBar").style.width = `${((currentIdx) / 21) * 100}%`;
-      
+      if (currentIdx >= 21) { endGame(); return; }
+      const q = gameData[currentIdx];
+      document.getElementById("question").innerHTML = q.q.replace(/(\d+)/g, '<sub>$1</sub>');
+      document.getElementById("progressBar").style.width = `${(currentIdx / 21) * 100}%`;
       const input = document.getElementById("answer");
       input.value = ""; input.disabled = false; input.focus();
       document.getElementById("result").innerHTML = "";
@@ -356,11 +314,9 @@
       clearInterval(interval);
       timer = 30;
       document.getElementById("timer").innerText = timer;
-      document.getElementById("timer").classList.remove("text-red-500", "animate-pulse");
       interval = setInterval(() => {
         timer--;
         document.getElementById("timer").innerText = timer;
-        if (timer <= 5) document.getElementById("timer").classList.add("text-red-500", "animate-pulse");
         if (timer <= 0) { clearInterval(interval); handleTimeOut(); }
       }, 1000);
     }
@@ -368,10 +324,9 @@
     function handleTimeOut() {
       if (answered) return;
       answered = true;
-      playSound('timeout');
-      let correct = gameData[currentIdx].a;
-      document.getElementById("result").innerHTML = `<span class="text-red-500 font-bold bg-red-100/50 px-4 py-2 rounded-lg inline-block w-full text-sm">Hết giờ! Đáp án: ${correct}</span>`;
+      playSound('wrong');
       streak = 0;
+      document.getElementById("result").innerHTML = `<span class="bg-red-100 text-red-700 px-4 py-2 rounded-xl font-bold">Hết giờ! Đáp án: ${gameData[currentIdx].a}</span>`;
       document.getElementById("answer").disabled = true;
       toggleButtons(false);
       updateUI();
@@ -379,44 +334,25 @@
 
     function checkAnswer() {
       if (answered) return;
-      let user = document.getElementById("answer").value.trim();
-      if (!user) { document.getElementById("answer").focus(); return; }
-      
+      const user = document.getElementById("answer").value.trim();
+      if (!user) return;
       clearInterval(interval);
       answered = true;
-      document.getElementById("answer").disabled = true;
-
-      let correct = gameData[currentIdx].a;
-      let cleanUser = user.replace(/\s+/g, '');
-      let cleanCorrect = correct.replace(/\s+/g, '');
-
-      let isCorrect = (cleanUser === cleanCorrect);
-      let isWarning = false;
-
-      // Xử lý chấp nhận đáp án thiếu ",..." nhưng có cảnh báo
-      if (!isCorrect && cleanCorrect.endsWith(",...") && cleanUser === cleanCorrect.slice(0, -4)) {
-        isCorrect = true;
-        isWarning = true;
-      }
-
-      const resDiv = document.getElementById("result");
-      const container = document.getElementById("mainContainer");
-
+      const correct = gameData[currentIdx].a;
+      const isCorrect = (user.replace(/\s/g, '') === correct.replace(/\s/g, ''));
+      
       if (isCorrect) {
         playSound('correct');
-        if (isWarning) {
-          resDiv.innerHTML = `<span class="text-orange-600 font-bold bg-orange-100/50 px-4 py-2 rounded-lg inline-block w-full text-xs sm:text-sm">⚠️ Tạm đúng! Nhớ thêm <b>,...</b> (Đáp án: ${correct})</span>`;
-        } else {
-          resDiv.innerHTML = `<span class="text-emerald-600 font-bold bg-emerald-100/50 px-4 py-2 rounded-lg inline-block w-full">✅ CHÍNH XÁC</span>`;
-        }
         score++; streak++;
+        document.getElementById("result").innerHTML = `<span class="text-emerald-600 font-bold text-xl">✅ Chính xác!</span>`;
       } else {
         playSound('wrong');
-        container.classList.add("wrong-shake");
-        setTimeout(() => container.classList.remove("wrong-shake"), 400);
-        resDiv.innerHTML = `<span class="text-red-600 text-xs sm:text-sm font-semibold bg-red-100/50 px-4 py-2 rounded-lg inline-block w-full leading-tight">❌ SAI! Đáp án: <b class="text-red-700 text-base">${correct}</b></span>`;
         streak = 0;
+        document.getElementById("mainContainer").classList.add("wrong-shake");
+        setTimeout(() => document.getElementById("mainContainer").classList.remove("wrong-shake"), 400);
+        document.getElementById("result").innerHTML = `<div class="bg-red-50 p-2 rounded-xl border border-red-100 text-red-600 text-sm font-bold leading-tight">❌ Sai! Đáp án: <br><span class="text-lg">${correct}</span></div>`;
       }
+      document.getElementById("answer").disabled = true;
       toggleButtons(false);
       updateUI();
     }
@@ -428,35 +364,44 @@
     }
 
     function endGame() {
-      playSound('complete');
-      clearInterval(interval);
       document.getElementById("progressBar").style.width = "100%";
-      const resDiv = document.getElementById("result");
-      resDiv.innerHTML = `
-        <div class="fade-in py-2">
-          <p class="text-blue-600 text-xl font-black">HOÀN THÀNH LƯỢT!</p>
-          <p class="text-slate-600 text-sm mb-3">Bạn đang có ${score} điểm và chuỗi ${streak}.</p>
-          <div class="flex flex-col gap-2">
-            <button onclick="continueGame()" class="w-full px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-sm font-bold shadow-md transition-colors">Tiếp tục (Cộng dồn)</button>
-            <button onclick="goHome()" class="w-full px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-sm font-bold transition-colors">Quay về Menu</button>
-          </div>
+      document.getElementById("result").innerHTML = `
+        <div class="p-4 bg-blue-50 rounded-2xl border border-blue-100 w-full">
+          <p class="font-black text-blue-700 text-lg">XUẤT SẮC!</p>
+          <p class="text-slate-600 text-sm">Điểm: ${score} - Chuỗi lớn nhất: ${streak}</p>
+          <button onclick="goHome()" class="mt-4 bg-blue-600 text-white px-8 py-2 rounded-xl font-bold">Làm lại</button>
         </div>
       `;
-      document.getElementById("nextBtn").classList.add("hidden");
       document.getElementById("submitBtn").classList.add("hidden");
+      document.getElementById("nextBtn").classList.add("hidden");
     }
 
-    function enterKey(e) { if (e.key === "Enter") answered ? (currentIdx >= 20 ? null : nextQuestion()) : checkAnswer(); }
-    
-    function toggleButtons(isAnswering) {
-      document.getElementById("submitBtn").classList.toggle("hidden", !isAnswering);
-      document.getElementById("nextBtn").classList.toggle("hidden", isAnswering);
+    function toggleButtons(answering) {
+      document.getElementById("submitBtn").classList.toggle("hidden", !answering);
+      document.getElementById("nextBtn").classList.toggle("hidden", answering);
     }
 
     function updateUI() {
       document.getElementById("score").innerText = score;
       document.getElementById("streak").innerText = streak;
     }
+
+    function enterKey(e) { 
+      if (e.key === "Enter") answered ? (currentIdx < 20 ? nextQuestion() : null) : checkAnswer(); 
+    }
+
+    function goHome() {
+      playSound('click');
+      clearInterval(interval);
+      document.getElementById("menu").classList.remove("hidden");
+      document.getElementById("game").classList.add("hidden");
+      document.getElementById("backBtn").classList.add("hidden");
+    }
+
+    document.body.addEventListener('click', () => {
+      initAudio();
+      if (isBGMEnabled && !bgmInterval) playBGM();
+    }, { once: true });
   </script>
 </body>
 </html>
