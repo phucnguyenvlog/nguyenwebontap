@@ -237,7 +237,7 @@
     function checkAnswer(userStr, qObj) {
       if (currentMode === 'symbol') {
         if (userStr === qObj.a) return { ok: true, msg: "Chính xác!" };
-        if (userStr.toLowerCase() === qObj.a.toLowerCase()) return { ok: false, msg: "Sai! Chữ cái đầu phải viết HOA." };
+        if (userStr.toLowerCase() === qObj.a.toLowerCase()) return { ok: false, msg: "Sai! Chữ cái đầu phải viết HOA, chữ cái sau viết THƯỜNG!." };
         return { ok: false, msg: "" };
       }
 
