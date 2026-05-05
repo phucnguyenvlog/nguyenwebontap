@@ -1,9 +1,10 @@
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Ôn Hoá Học Pro </title>
+  <title>Ôn Hóa Học</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap');
@@ -11,150 +12,139 @@
     body { 
       font-family: 'Nunito', sans-serif; 
       margin: 0; padding: 0; overflow: hidden;
-      min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      background-color: #f0f4f8;
     }
 
-    .roman-font {
-      font-family: 'Georgia', 'Times New Roman', serif !important;
-      /* ĐÃ XÓA text-transform: uppercase để hiển thị đúng những gì bạn gõ */
-    }
+    sub { font-size: 0.6em; vertical-align: sub; font-weight: 900; }
 
-    .dynamic-bg {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      z-index: -1;
-      background: linear-gradient(-45deg, #FFB199, #FF0844, #00C9FF, #92FE9D);
+    .animated-bg {
+      background: linear-gradient(-45deg, #0f172a, #1e1b4b, #1e3a8a, #0c4a6e);
       background-size: 400% 400%;
-      opacity: 0.8;
+      animation: gradientBG 15s ease infinite;
     }
 
-    .animate-bg {
-      animation: gradientMove 20s ease infinite;
-    }
-
-    @keyframes gradientMove {
+    @keyframes gradientBG {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
-    sub { font-size: 0.55em; vertical-align: sub; font-weight: 900; }
+    .bubbles {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0; overflow: hidden; pointer-events: none;
+    }
+
+    .bubbles li {
+      position: absolute; display: block; list-style: none;
+      width: 20px; height: 20px; background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: floatUp 20s linear infinite;
+      bottom: -150px; border-radius: 50%;
+    }
+
+    .bubbles li:nth-child(1) { left: 25%; width: 80px; height: 80px; animation-delay: 0s; }
+    .bubbles li:nth-child(2) { left: 10%; width: 30px; height: 30px; animation-delay: 2s; animation-duration: 12s; }
+    .bubbles li:nth-child(3) { left: 70%; width: 25px; height: 25px; animation-delay: 4s; }
+    .bubbles li:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 50%; }
+      100% { transform: translateY(-1200px) rotate(720deg); opacity: 0; border-radius: 40%; }
+    }
 
     .glass-card {
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       border-radius: 2.5rem;
-      width: 92%;
-      max-width: 420px;
-      padding: 2.5rem 2rem;
-      text-align: center;
-      position: relative;
-      z-index: 10;
     }
 
-    .btn-action {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .btn-action:hover { transform: translateY(-3px); box-shadow: 0 12px 20px -8px rgba(0,0,0,0.2); }
-    .btn-action:active { transform: translateY(1px); }
-
-    .error-shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+    .wrong-shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
     @keyframes shake {
-      10%, 90% { transform: translate3d(-2px, 0, 0); }
-      20%, 80% { transform: translate3d(4px, 0, 0); }
-      30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
-      40%, 60% { transform: translate3d(8px, 0, 0); }
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
     }
 
-    /* Hiệu ứng focus input */
-    #answer-input:focus {
-      border-color: #6366f1;
-      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
-    }
+    .roman-style { font-family: 'Georgia', serif; }
   </style>
 </head>
-<body>
+<body class="animated-bg min-h-screen flex items-center justify-center p-4 relative">
 
-  <div id="bg" class="dynamic-bg animate-bg"></div>
-  
-  <div class="fixed top-6 right-6 z-[100] flex gap-2">
-    <button id="bg-music-toggle" onclick="toggleMusic()" class="bg-white/80 backdrop-blur-md p-3 rounded-full shadow-lg hover:bg-white transition">🎵</button>
-    <button onclick="toggleEffects()" class="bg-white/80 backdrop-blur-md p-3 rounded-full shadow-lg hover:bg-white transition">✨</button>
-  </div>
+  <ul class="bubbles">
+    <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+  </ul>
 
-  <div class="glass-card" id="app-card">
-    
+  <div id="app-card" class="glass-card w-full max-w-md p-8 text-center relative z-10">
+    <button onclick="toggleSound()" id="soundBtn" class="absolute top-6 right-6 text-2xl hover:scale-110 transition-transform">🔊</button>
+
     <!-- MENU -->
     <div id="screen-menu">
-      <h1 class="text-4xl font-black text-slate-800 mb-1">Ôn Hoá Học</h1>
-      <p class="text-sm font-extrabold text-indigo-600 mb-8 uppercase tracking-wide">Lưu ý hãy Hóa trị và ký hiệu đúng</p>
+      <div class="text-6xl mb-4 animate-pulse">🧪</div>
+      <h1 class="text-4xl font-black text-slate-800 mb-1">Ôn Hóa Học</h1>
+      <p class="text-xs text-indigo-600 font-bold mb-8 uppercase tracking-widest">Logic Cl & S Linh Hoạt Tuyệt Đối</p>
       
       <div class="space-y-4">
-        <button onclick="startGame('valency')" class="btn-action w-full bg-gradient-to-br from-blue-600 to-indigo-500 text-white py-5 rounded-2xl font-black text-xl shadow-lg flex flex-col items-center">
-          <span>ÔN TẬP HÓA TRỊ</span>
+        <button onclick="startGame('valency')" class="w-full bg-gradient-to-br from-indigo-600 to-blue-700 text-white py-5 rounded-2xl font-black text-xl shadow-lg active:scale-95 transition-all">
+          ÔN TẬP HÓA TRỊ
         </button>
-        <button onclick="startGame('symbol')" class="btn-action w-full bg-gradient-to-br from-purple-600 to-pink-500 text-white py-5 rounded-2xl font-black text-xl shadow-lg flex flex-col items-center">
-          <span>ÔN TẬP KÝ HIỆU</span>
+        <button onclick="startGame('symbol')" class="w-full bg-gradient-to-br from-teal-500 to-emerald-600 text-white py-5 rounded-2xl font-black text-xl shadow-lg active:scale-95 transition-all">
+          ÔN TẬP KÝ HIỆU
         </button>
       </div>
     </div>
 
-    <!-- CHƠI GAME -->
+    <!-- GAME -->
     <div id="screen-game" class="hidden">
       <div class="flex justify-between items-center mb-6">
-        <button onclick="backToMenu()" class="text-slate-400 font-bold hover:text-slate-700 bg-slate-100/50 px-3 py-1.5 rounded-lg transition">❮ Thoát</button>
+        <button onclick="backToMenu()" class="text-slate-400 font-bold hover:text-slate-700 bg-slate-100 px-3 py-1.5 rounded-lg transition">❮ Thoát</button>
         <div class="bg-indigo-100 text-indigo-600 px-4 py-1.5 rounded-full text-xs font-black uppercase">
           Câu <span id="progress-text">1/22</span>
         </div>
       </div>
 
-      <div class="bg-white/60 rounded-3xl p-6 mb-6 shadow-inner border border-white/50">
-        <h2 id="question" class="text-6xl font-black text-slate-800 min-h-[100px] flex items-center justify-center leading-tight"></h2>
+      <div class="bg-slate-50/50 rounded-3xl p-6 mb-6 shadow-inner border border-white">
+        <h2 id="question" class="text-6xl font-black text-slate-800 min-h-[100px] flex items-center justify-center tracking-wider"></h2>
       </div>
       
-      <!-- Input đã tắt tự động in hoa CSS để bạn nhìn thấy đúng ký tự mình gõ -->
-      <input id="answer-input" type="text" placeholder="Gõ I, II, III..." autocomplete="off" 
-        class="w-full px-4 py-5 text-center text-3xl font-bold rounded-2xl border-2 border-slate-200 outline-none mb-4 bg-white/90 transition-all">
+      <input id="answer-input" type="text" placeholder="Nhập đáp án..." autocomplete="off" 
+        class="w-full px-4 py-5 text-center text-3xl font-bold rounded-2xl border-2 border-slate-200 focus:border-indigo-500 outline-none mb-4 bg-white/90">
       
-      <button id="btn-main" onclick="handleAction()" class="btn-action w-full bg-slate-800 hover:bg-slate-900 text-white py-4 rounded-2xl font-black text-xl shadow-lg uppercase">
+      <button id="btn-main" onclick="handleAction()" class="w-full bg-slate-800 text-white py-4 rounded-2xl font-black text-xl shadow-lg uppercase transition-all">
         Kiểm tra
       </button>
       
-      <div id="feedback" class="mt-4 min-h-[90px] font-bold text-base flex flex-col items-center justify-center gap-1"></div>
+      <div id="feedback" class="mt-4 min-h-[90px] flex flex-col items-center justify-center gap-1"></div>
 
       <div class="flex gap-4 mt-2 pt-4 border-t border-slate-200/50">
-        <div class="flex-1 bg-blue-50/50 p-2 rounded-2xl">
+        <div class="flex-1 bg-blue-50/50 p-2 rounded-2xl text-center">
           <p class="text-[10px] text-blue-400 font-bold uppercase mb-1">Điểm</p>
           <p id="score" class="text-2xl font-black text-blue-600">0</p>
         </div>
-        <div class="flex-1 bg-pink-50/50 p-2 rounded-2xl">
-          <p class="text-[10px] text-pink-400 font-bold uppercase mb-1">Chuỗi</p>
-          <p id="streak" class="text-2xl font-black text-pink-600">0</p>
+        <div class="flex-1 bg-orange-50/50 p-2 rounded-2xl text-center">
+          <p class="text-[10px] text-orange-400 font-bold uppercase mb-1">Chuỗi</p>
+          <p id="streak" class="text-2xl font-black text-orange-600">0</p>
         </div>
       </div>
     </div>
 
-    <!-- KẾT QUẢ -->
+    <!-- RESULT -->
     <div id="screen-result" class="hidden">
       <div class="text-6xl mb-4">🏆</div>
-      <h2 class="text-3xl font-black text-slate-800 mb-2 uppercase">Hoàn thành</h2>
-      <div class="bg-white/50 rounded-3xl py-6 px-4 mb-8 border border-white">
+      <h2 class="text-3xl font-black text-slate-800 mb-2 uppercase">Kết quả</h2>
+      <div class="bg-white/50 rounded-3xl py-6 px-4 mb-8 border border-white shadow-inner">
         <p id="final-score" class="text-7xl font-black text-indigo-600">0</p>
       </div>
       <div class="space-y-4">
-        <button onclick="resumeGame()" class="btn-action w-full bg-emerald-500 text-white py-4 rounded-2xl font-black text-xl uppercase shadow-lg">Chơi tiếp</button>
-        <button onclick="backToMenu()" class="btn-action w-full bg-white text-slate-600 py-4 rounded-2xl font-black text-xl uppercase border-2 border-slate-200">Về Menu</button>
+        <button onclick="startGame(currentMode)" class="w-full bg-emerald-500 text-white py-4 rounded-2xl font-black text-xl uppercase shadow-lg">Làm lại</button>
+        <button onclick="backToMenu()" class="w-full bg-white text-slate-600 py-4 rounded-2xl font-black text-xl uppercase border-2 border-slate-200">Về Menu</button>
       </div>
     </div>
   </div>
 
   <script>
-    let audioCtx = null, bgOsc = null, musicOn = false;
-    
     const dataSet = {
       valency: [
         {q: "H", a: "I"}, {q: "Na", a: "I"}, {q: "K", a: "I"}, {q: "Ag", a: "I"}, {q: "OH", a: "I"}, {q: "NO3", a: "I"},
@@ -171,75 +161,49 @@
     };
 
     let questions = [], currentIdx = 0, score = 0, streak = 0, isStateChecking = false, currentMode = "";
+    let isSoundEnabled = true;
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
 
     function initAudio() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (!audioCtx) audioCtx = new AudioContext();
       if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
-    function toggleMusic() {
-      initAudio();
-      if (!musicOn) {
-        startBackgroundMusic();
-        document.getElementById('bg-music-toggle').innerText = "⏸";
-        musicOn = true;
-      } else {
-        if (bgOsc) bgOsc.stop();
-        document.getElementById('bg-music-toggle').innerText = "🎵";
-        musicOn = false;
-      }
-    }
-
-    function startBackgroundMusic() {
-      const notes = [261.63, 329.63, 392.00, 523.25]; 
-      let i = 0;
-      function playLoop() {
-        if (!musicOn) return;
-        const osc = audioCtx.createOscillator();
-        const g = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(notes[i], audioCtx.currentTime);
-        g.gain.setValueAtTime(0, audioCtx.currentTime);
-        g.gain.linearRampToValueAtTime(0.02, audioCtx.currentTime + 1);
-        g.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 3);
-        osc.connect(g); g.connect(audioCtx.destination);
-        osc.start(); osc.stop(audioCtx.currentTime + 3);
-        i = (i + 1) % notes.length;
-        bgOsc = { stop: () => { osc.stop(); musicOn = false; } };
-        setTimeout(playLoop, 2000);
-      }
-      playLoop();
-    }
-
-    function playTone(type) {
+    function playTone(freq, type, duration, vol=0.1) {
+      if (!isSoundEnabled) return;
       initAudio();
       const osc = audioCtx.createOscillator();
       const g = audioCtx.createGain();
-      osc.frequency.setValueAtTime(type === 'win' ? 880 : 150, audioCtx.currentTime);
-      g.gain.setValueAtTime(0.1, audioCtx.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      g.gain.setValueAtTime(vol, audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
       osc.connect(g); g.connect(audioCtx.destination);
-      osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+      osc.start(); osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function playSound(type) {
+      if(type === 'correct') { playTone(600, 'sine', 0.1); setTimeout(() => playTone(800, 'sine', 0.15), 100); }
+      else if(type === 'wrong') { playTone(200, 'sawtooth', 0.3); }
+      else if(type === 'click') { playTone(800, 'sine', 0.05, 0.05); }
+    }
+
+    function toggleSound() {
+      isSoundEnabled = !isSoundEnabled;
+      document.getElementById("soundBtn").innerText = isSoundEnabled ? "🔊" : "🔇";
     }
 
     function startGame(mode) {
-      currentMode = mode; 
-      setupRound();
-      document.getElementById('screen-menu').classList.add('hidden');
-      document.getElementById('screen-game').classList.remove('hidden');
-    }
-
-    function setupRound() {
-      questions = [...dataSet[currentMode]].sort(() => Math.random() - 0.5);
-      currentIdx = 0;
+      playSound('click');
+      currentMode = mode;
+      questions = [...dataSet[mode]].sort(() => Math.random() - 0.5);
+      currentIdx = 0; score = 0; streak = 0;
       updateStats();
-      nextQuestion();
-    }
-
-    function backToMenu() {
-      document.getElementById('screen-menu').classList.remove('hidden');
-      document.getElementById('screen-game').classList.add('hidden');
+      document.getElementById('screen-menu').classList.add('hidden');
       document.getElementById('screen-result').classList.add('hidden');
+      document.getElementById('screen-game').classList.remove('hidden');
+      nextQuestion();
     }
 
     function nextQuestion() {
@@ -249,77 +213,111 @@
       qEl.innerHTML = q.q.replace(/(\d+)/g, '<sub>$1</sub>');
       
       const input = document.getElementById('answer-input');
-      input.value = ""; input.disabled = false;
-      if (window.innerWidth > 768) input.focus();
-      
-      if(currentMode === 'valency') input.className = "w-full px-4 py-5 text-center text-3xl font-bold rounded-2xl border-2 border-slate-200 outline-none mb-4 bg-white/90 roman-font";
-      else input.className = "w-full px-4 py-5 text-center text-3xl font-bold rounded-2xl border-2 border-slate-200 outline-none mb-4 bg-white/90";
+      input.value = ""; input.disabled = false; input.focus();
+      if(currentMode === 'valency') input.classList.add('roman-style');
+      else input.classList.remove('roman-style');
 
       document.getElementById('progress-text').innerText = `${currentIdx + 1}/${questions.length}`;
       document.getElementById('feedback').innerHTML = "";
       document.getElementById('btn-main').innerText = "Kiểm tra";
-      document.getElementById('btn-main').className = "btn-action w-full bg-slate-800 text-white py-4 rounded-2xl font-black text-xl shadow-lg uppercase";
+      document.getElementById('btn-main').className = "w-full bg-slate-800 text-white py-4 rounded-2xl font-black text-xl shadow-lg uppercase transition-all active:scale-95";
+    }
+
+    function normalize(str) {
+      // Nhận diện bất kỳ tổ hợp dấu chấm nào từ 2 cái trở lên là mở rộng
+      const hasDots = /\.{2,}/.test(str); 
+      const parts = str.replace(/\s+/g, '')
+                     .replace(/\.+/g, '') 
+                     .split(',')
+                     .filter(x => x)
+                     .sort();
+      return { parts, hasDots };
     }
 
     function checkAnswer(userStr, qObj) {
-      // 1. Kiểm tra Ký hiệu hóa học
       if (currentMode === 'symbol') {
-        if (userStr === qObj.a) return { isCorrect: true, msg: "Chính xác!" };
-        if (userStr.toLowerCase() === qObj.a.toLowerCase()) return { isCorrect: false, msg: "Sai định dạng! Phải viết hoa chữ cái đầu (VD: Cu)." };
-        return { isCorrect: false, msg: "" };
+        if (userStr === qObj.a) return { ok: true, msg: "Chính xác!" };
+        if (userStr.toLowerCase() === qObj.a.toLowerCase()) return { ok: false, msg: "Sai! Chữ cái đầu phải viết HOA." };
+        return { ok: false, msg: "" };
       }
 
-      // 2. Kiểm tra Hóa trị (Yêu cầu nghiêm ngặt IN HOA)
-      // Tìm xem có chữ thường nào trong chuỗi không
-      if (/[a-z]/.test(userStr)) {
-        return { isCorrect: false, msg: "Lỗi: Bạn phải viết chữ La Mã IN HOA (I, II, III...)" };
+      if (/[a-z]/.test(userStr)) return { ok: false, msg: "Lỗi: Phải gõ chữ La Mã IN HOA!" };
+
+      const { parts: userParts, hasDots: userHasDots } = normalize(userStr);
+      const targetParts = qObj.a.replace(/\.+/g, '').split(',').sort();
+
+      // --- LOGIC LINH HOẠT CHO CLO (Cl) & LƯU HUỲNH (S) ---
+      const flexibleElements = {
+        "Cl": ["I", "III", "V", "VII"],
+        "S": ["II", "IV", "VI"]
+      };
+
+      if (flexibleElements[qObj.q]) {
+        const possible = flexibleElements[qObj.q];
+        if (userParts.length > 0 && userParts.every(p => possible.includes(p))) {
+          // Clo và Nitơ có logic cần dấu chấm
+          if (qObj.q === "Cl") {
+            if (userParts.includes("I")) {
+               if (userHasDots) return { ok: true, msg: "Đúng hoàn hảo! ✅" };
+               return { ok: true, msg: "Đúng! Nên thêm dấu '...' cho Clo." };
+            }
+            return { ok: true, msg: "Đúng! Chú ý: Clo thường có hóa trị I phổ biến." };
+          }
+          // S không cần dấu chấm trong đáp án gốc
+          if (userParts.length === possible.length) return { ok: true, msg: "Đúng hoàn hảo! ✅" };
+          return { ok: true, msg: "Chính xác! (Vẫn còn hóa trị khác)" };
+        }
+        return { ok: false, msg: "" };
       }
 
-      const userClean = userStr.replace(/\s+/g, '');
-      const userParts = userClean.split(',').map(s => s.replace(/\./g, '')).filter(x => x);
-      const hasDots = /\.{2,}/.test(userStr);
-
-      // Logic riêng cho các nguyên tố có nhiều hóa trị/dấu chấm
-      if (qObj.q === "Cl") {
-        if (userParts.length === 1 && userParts[0] === "I" && hasDots) return { isCorrect: true, msg: "Đúng nhưng chú ý! ‼️" };
-        if (userParts.every(p => ["I","III","V","VII"].includes(p)) && userParts.length > 0) return { isCorrect: true, msg: "chú ý! Cl thường là I,..." };
-      }
-
+      // --- LOGIC NITƠ (N) ---
       if (qObj.q === "N") {
-        if (userParts.every(p => ["II","III","IV"].includes(p)) && userParts.length === 3 && hasDots) return { isCorrect: true, msg: "Đúng nhưng chú ý! ‼️" };
-        if (userParts.every(p => ["I","II","III","IV"].includes(p)) && userParts.length > 0) return { isCorrect: true, msg: "chú ý! N thường là II, III, IV,..." };
+        const nStandard = ["II", "III", "IV"];
+        const isStandard = nStandard.length === userParts.length && nStandard.every((v, i) => v === userParts[i]);
+        if (isStandard) {
+          if (userHasDots) return { ok: true, msg: "Đúng hoàn hảo! ✅" };
+          return { ok: true, msg: "Đúng! Nhớ thêm dấu '...' cho Nitơ nhé." };
+        }
+        if (userParts.includes("I") && userParts.every(p => ["I", "II", "III", "IV"].includes(p))) {
+          return { ok: true, msg: "Vẫn đúng! Nhưng II, III, IV là phổ biến nhất." };
+        }
+        return { ok: false, msg: "" };
       }
 
-      // Cho phép nhập 1 trong các hóa trị đúng (như Cu hoặc S)
-      const targetParts = qObj.a.split(',');
-      if (userParts.length > 0 && userParts.every(p => targetParts.includes(p))) {
-        return { isCorrect: true, msg: "Chính xác!" };
+      // --- LOGIC CHUNG ---
+      if (userParts.length === targetParts.length && userParts.every((v, i) => v === targetParts[i])) {
+        return { ok: true, msg: "Chính xác!" };
+      }
+      if (userParts.length === 1 && targetParts.includes(userParts[0])) {
+        return { ok: true, msg: "Đúng! (Vẫn còn hóa trị khác)" };
       }
 
-      return { isCorrect: false, msg: "" };
+      return { ok: false, msg: "" };
     }
 
     function handleAction() {
       if (!isStateChecking) {
         const inputEl = document.getElementById('answer-input');
-        const rawUser = inputEl.value.trim();
-        if(!rawUser) return;
-        const result = checkAnswer(rawUser, questions[currentIdx]);
-        isStateChecking = true; inputEl.disabled = true;
+        const userValue = inputEl.value.trim();
+        if(!userValue) return;
+
+        const result = checkAnswer(userValue, questions[currentIdx]);
+        isStateChecking = true;
+        inputEl.disabled = true;
         
         const feedbackEl = document.getElementById('feedback');
         const btnMain = document.getElementById('btn-main');
 
-        if (result.isCorrect) {
-          score++; streak++; playTone('win');
-          feedbackEl.innerHTML = `<span class="text-emerald-500 text-xl">✔ ${result.msg || 'Chính xác!'}</span>`;
-          btnMain.className = "btn-action w-full bg-emerald-500 text-white py-4 rounded-2xl font-black text-xl shadow-lg uppercase";
+        if (result.ok) {
+          score++; streak++; playSound('correct');
+          feedbackEl.innerHTML = `<span class="text-emerald-500 font-bold text-lg">✔ ${result.msg || 'Chính xác!'}</span>`;
+          btnMain.className = "w-full bg-emerald-500 text-white py-4 rounded-2xl font-black text-xl shadow-lg uppercase";
         } else {
-          streak = 0; playTone('lose');
-          document.getElementById('app-card').classList.add('error-shake');
-          setTimeout(() => document.getElementById('app-card').classList.remove('error-shake'), 500);
-          feedbackEl.innerHTML = `<div class="text-red-500 text-center"><span class="text-lg">❌ ${result.msg || 'Sai rồi!'}</span><br><span class="text-slate-500 text-sm italic">Đáp án đúng: <b class="text-slate-800 text-xl">${questions[currentIdx].a}</b></span></div>`;
-          btnMain.className = "btn-action w-full bg-red-500 text-white py-4 rounded-2xl font-black text-xl shadow-lg uppercase";
+          streak = 0; playSound('wrong');
+          document.getElementById('app-card').classList.add('wrong-shake');
+          setTimeout(() => document.getElementById('app-card').classList.remove('wrong-shake'), 400);
+          feedbackEl.innerHTML = `<div class="text-red-500 text-center leading-tight"><span class="font-bold">${result.msg || 'Chưa đúng!'}</span><br><span class="text-slate-400 text-sm">Đáp án: <b class="text-slate-700 text-xl">${questions[currentIdx].a}</b></span></div>`;
+          btnMain.className = "w-full bg-red-500 text-white py-4 rounded-2xl font-black text-xl shadow-lg uppercase";
         }
         btnMain.innerText = "Tiếp theo ❯";
         updateStats();
@@ -340,15 +338,18 @@
       document.getElementById('final-score').innerText = score;
     }
 
-    function resumeGame() {
-      setupRound();
+    function backToMenu() {
+      playSound('click');
+      document.getElementById('screen-game').classList.add('hidden');
       document.getElementById('screen-result').classList.add('hidden');
-      document.getElementById('screen-game').classList.remove('hidden');
+      document.getElementById('screen-menu').classList.remove('hidden');
     }
 
-    function toggleEffects() { document.getElementById('bg').classList.toggle('animate-bg'); }
-
-    document.getElementById('answer-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') handleAction(); });
+    document.getElementById('answer-input').addEventListener('keypress', (e) => { 
+      if(e.key === 'Enter') handleAction(); 
+    });
   </script>
 </body>
 </html>
+
+```
